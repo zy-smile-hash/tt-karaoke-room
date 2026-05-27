@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K歌房间界面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(180deg, #1a0f2b 0%, #2d1b4e 50%, #1a0f2b 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 背景装饰 */
+    .bg-decoration {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,100,150,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(100,150,255,0.1)"/><circle cx="50" cy="80" r="2.5" fill="rgba(255,200,100,0.1)"/></svg>');
+      background-size: 100px;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* 顶部状态栏 */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      color: white;
+    }
+
+    .time {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .battery {
+      background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* 房间头部 */
+    .room-header {
+      display: flex;
+      align-items: center;
+      padding: 0 20px 16px;
+      color: white;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .room-id {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .room-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+    }
+
+    /* 房间统计 */
+    .room-stats {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 20px 16px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 15px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 标签栏 */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px 16px;
+    }
+
+    .tab {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #ff6b9d 0%, #ff8a65 100%);
+    }
+
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* 麦序用户 */
+    .mic-queue {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px 16px;
+    }
+
+    .mic-user {
+      position: relative;
+    }
+
+    .mic-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .mic-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mic-badge {
+      position: absolute;
+      bottom: -8px;
+      right: -4px;
+      background: white;
+      color: #333;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* 歌词卡片 */
+    .lyrics-card {
+      margin: 0 16px 20px;
+      background: linear-gradient(180deg, rgba(20, 10, 40, 0.95) 0%, rgba(40, 20, 60, 0.9) 100%);
+      border-radius: 24px;
+      border: 3px solid rgba(168, 85, 247, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 顶部标签 */
+    .card-badge {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+    }
+
+    .card-badge::before,
+    .card-badge::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .card-badge::before {
+      left: -8px;
+      border-width: 8px 8px 8px 0;
+      border-color: transparent #7c3aed transparent transparent;
+    }
+
+    .card-badge::after {
+      right: -8px;
+      border-width: 8px 0 8px 8px;
+      border-color: transparent transparent transparent #7c3aed;
+    }
+
+    .lyrics-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px 12px;
+    }
+
+    .singer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .score-display {
+      text-align: right;
+    }
+
+    .score-label {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .score-value {
+      font-size: 40px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* 歌词内容 */
+    .lyrics-content {
+      text-align: center;
+      padding: 20px 24px 32px;
+    }
+
+    .lyrics-line {
+      font-size: 32px;
+      font-weight: 600;
+      color: #ffd700;
+      text-shadow: 0 2px 20px rgba(255, 215, 0, 0.4);
+      margin-bottom: 12px;
+    }
+
+    .lyrics-line-next {
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* 歌词底部控制 */
+    .lyrics-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px 20px;
+    }
+
+    .control-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px 20px;
+      border-radius: 16px;
+      color: white;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn.primary {
+      background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+    }
+
+    .control-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .music-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+    }
+
+    /* 点歌区域 */
+    .songlist {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      margin: 0 16px 20px;
+      border-radius: 20px;
+      padding: 16px 20px;
+    }
+
+    .songlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .songlist-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .song-count {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .next-song {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 15px;
+    }
+
+    /* 活动徽章 */
+    .event-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: 16px;
+    }
+
+    .event-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .event-text {
+      color: white;
+    }
+
+    .event-name {
+      font-weight: 600;
+    }
+
+    .event-count {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .order-song-btn {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 28px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .order-song-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* 麦位 */
+    .mic-seats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px 20px;
+      gap: 8px;
+    }
+
+    .mic-seat {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mic-seat-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mic-seat-avatar.active {
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    }
+
+    .mic-seat-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .mic-seat-badge {
+      position: absolute;
+      bottom: -8px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
+    /* 聊天区域 */
+    .chat-area {
+      padding: 0 16px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .system-message {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .chat-message {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 12px 16px;
+      max-width: 85%;
+    }
+
+    .chat-message .role {
+      color: #fb923c;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .chat-message .user {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+
+    .chat-message .text {
+      color: white;
+      line-height: 1.6;
+    }
+
+    /* 礼物区域 */
+    .gifts-area {
+      position: absolute;
+      bottom: 100px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .gift-emoji {
+      font-size: 72px;
+      animation: bounce 0.5s ease infinite;
+      filter: drop-shadow(0 4px 20px rgba(255, 100, 150, 0.6));
+    }
+
+    .gift-badge {
+      background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 18px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
+    }
+
+    /* 底部操作栏 */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 40%);
+    }
+
+    .input-box {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 14px 20px;
+      border: none;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .input-box::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .bottom-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .bottom-btn.gift {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .bottom-btn .gift-icon {
+      font-size: 28px;
+    }
+
+    .bottom-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .bottom-btn .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 10px;
+      height: 10px;
+      background: #ef4444;
+      border-radius: 50%;
+    }
+
+    /* 装饰性元素 */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* 加入厂牌按钮 */
+    .join-brand-btn {
+      background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    /* 礼物小图标 */
+    .small-gift {
+      position: absolute;
+      right: 110px;
+      bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .small-gift-item {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+      position: relative;
+    }
+
+    .small-gift-item .gift-tag {
+      position: absolute;
+      top: -8px;
+      right: -4px;
+      background: #f59e0b;
+      color: white;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .small-gift-item:nth-child(2) {
+      background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%);
+    }
+
+    .gift-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .gift-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .gift-dot.active {
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-decoration"></div>
+
+  <!-- 顶部状态栏 -->
+  <div class="status-bar">
+    <div class="time">21:36</div>
+    <div class="status-icons">
+      <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 18l-4-4h8l-4 4z"/>
+        <path d="M2 10l4-4h8l4 4H2z"/>
+        <path d="M2 18l4-4h8l4 4H2z"/>
+      </svg>
+      <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 16l4-4h8l4 4H4z"/>
+        <path d="M4 10l4-4h8l4 4H4z"/>
+        <path d="M12 4v2"/>
+      </svg>
+      <span class="battery">66</span>
+    </div>
+  </div>
+
+  <!-- 房间头部 -->
+  <div class="room-header">
+    <div class="user-info">
+      <div class="avatar">💎</div>
+      <div class="user-details">
+        <div class="user-name">微质</div>
+        <div class="room-id">房间ID: 21173223</div>
+      </div>
+      <button class="tab" style="margin-left: 12px; background: rgba(255,255,255,0.2);">一起K歌</button>
+    </div>
+    <div class="room-actions">
+      <button class="action-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+      </button>
+      <button class="action-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+          <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+      </button>
+      <button class="action-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+          <path d="M12 2a4 4 0 014 4v4a4 4 0 11-8 0V6a4 4 0 014-4z"/>
+          <line x1="18" y1="20" x2="6" y2="20"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 房间统计 -->
+  <div class="room-stats">
+    <div class="stat-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color: #0ea5e9;">
+        <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+      </svg>
+      <span>47ms</span>
+    </div>
+    <div class="stat-item">
+      <span>今日点赞数: 5</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color: #60a5fa;">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M8.5 8.5l7 7"/>
+        <path d="M15.5 8.5l-7 7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 标签栏 -->
+  <div class="tabs">
+    <button class="tab active"># dd</button>
+    <button class="tab">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="margin-right: 6px;">
+        <path d="M12 3l1.912 5.813h6.113l-4.943 3.587 1.889 5.813L12 14.626l-4.971 3.587 1.889-5.813L3.975 8.813h6.113L12 3z"/>
+      </svg>
+      我的段位
+    </button>
+    <button class="tab">质量独唱</button>
+  </div>
+
+  <!-- 麦序用户 -->
+  <div class="mic-queue">
+    <div class="mic-user">
+      <div class="mic-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🧑‍🎤</div>
+    </div>
+    <div class="mic-user">
+      <div class="mic-avatar" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">🏞️</div>
+      <div class="mic-badge">1人麦下</div>
+    </div>
+  </div>
+
+  <!-- 歌词卡片 -->
+  <div class="lyrics-card">
+    <div class="card-badge">北京第十三薛之谦</div>
+    
+    <div class="lyrics-header">
+      <div class="singer-avatar"></div>
+      <div class="score-display">
+        <div class="score-label">当前得分</div>
+        <div class="score-value">1826</div>
+      </div>
+    </div>
+
+    <div class="lyrics-content">
+      <div class="lyrics-line">失去你我才知道要珍惜</div>
+      <div class="lyrics-line-next">当时无法</div>
+      <div class="lyrics-line-next">为你写的那首歌</div>
+    </div>
+
+    <div class="lyrics-controls">
+      <button class="control-btn primary">
+        <span style="font-size: 24px;">👯</span>
+        <span>默默跟唱</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="color: #ec4899;">
+          <path d="M14 5l7 7-7 7"/>
+          <path d="M3 12h18"/>
+        </svg>
+      </button>
+      <button class="control-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+          <path d="M6 16c2.21 0 4-1.79 4-4S8.21 8 6 8 2 9.79 2 12s1.79 4 4 4z"/>
+          <path d="M18 16c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
+          <path d="M12 6l2 6-2 6"/>
+        </svg>
+        <span style="opacity: 0.6;">原唱:关</span>
+      </button>
+      <div class="music-info">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+          <circle cx="10" cy="12" r="2"/>
+          <line x1="14" y1="10" x2="14" y2="14"/>
+          <line x1="12" y1="12" x2="18" y2="12"/>
+        </svg>
+        <span>Melody (伴奏)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 点歌区域 -->
+  <div class="songlist">
+    <div class="songlist-header">
+      <div>
+        <div class="songlist-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+          已点(2)
+          <span class="song-count">&gt;</span>
+        </div>
+        <div class="next-song">下一首:没那么简单 (DJ阿lo版)</div>
+      </div>
+      <div class="event-badge">
+        <div class="event-icon">🏆</div>
+        <div class="event-text">
+          <div class="event-name">沙滩恋歌杯</div>
+          <div class="event-count">33.8万人参与</div>
+        </div>
+      </div>
+      <button class="order-song-btn">点歌</button>
+    </div>
+  </div>
+
+  <!-- 麦位 -->
+  <div class="mic-seats">
+    <div class="mic-seat">
+      <div class="mic-seat-avatar" style="background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%); overflow: hidden;">
+        <div style="font-size: 32px;">👩</div>
+      </div>
+      <div class="mic-seat-badge">演唱</div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32" style="color: rgba(255,255,255,0.4);">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M12 14c-6 0-8 4-8 6h16c0-2-2-6-8-6z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32" style="color: rgba(255,255,255,0.4);">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M12 14c-6 0-8 4-8 6h16c0-2-2-6-8-6z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32" style="color: rgba(255,255,255,0.4);">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M12 14c-6 0-8 4-8 6h16c0-2-2-6-8-6z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar active" style="overflow: hidden;">
+        <div style="font-size: 32px;">🌙</div>
+      </div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32" style="color: rgba(255,255,255,0.4);">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M12 14c-6 0-8 4-8 6h16c0-2-2-6-8-6z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32" style="color: rgba(255,255,255,0.4);">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M12 14c-6 0-8 4-8 6h16c0-2-2-6-8-6z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="mic-seat">
+      <div class="mic-seat-avatar" style="background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); overflow: hidden;">
+        <div style="font-size: 32px;">👧👦</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 聊天区域 -->
+  <div class="chat-area">
+    <div class="system-message">我 进入房间</div>
+    
+    <div class="chat-message">
+      <div class="text">
+        <span class="role">房主</span>
+        <span class="user">是洛诗丫:</span>
+        <span>欢迎@CHANGE OF HEART，一起聊聊吧~</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div class="chat-message" style="flex: 1;">
+        <div class="text">
+          <span class="role">房主</span>
+          <span class="user">是洛诗丫:</span>
+          <span>欢迎@尼尔巴斯哥哥，一起聊聊吧~</span>
+        </div>
+      </div>
+      <button class="control-btn" style="padding: 8px 16px; background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);">
+        👋 打招呼
+      </button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div class="chat-message" style="flex: 1;">
+        <div class="text">
+          <span class="role">房主</span>
+          <span class="user" style="color: #a855f7;">是洛诗丫:</span>
+          <span>@尼尔巴斯哥哥 来成为暗恋Secret love厂牌的一员吧</span>
+        </div>
+      </div>
+    </div>
+    <button class="join-brand-btn">加入厂牌</button>
+  </div>
+
+  <!-- 礼物区域 -->
+  <div class="gifts-area">
+    <div class="gift-emoji">🤟</div>
+    <div class="gift-badge">打Call</div>
+  </div>
+
+  <div class="small-gift">
+    <div class="small-gift-item">
+      🏰
+      <div class="gift-tag">0.1元自选</div>
+    </div>
+    <div class="small-gift-item">
+      🚀
+      <div class="gift-tag">开黑专属</div>
+    </div>
+    <div class="gift-dots">
+      <div class="gift-dot active"></div>
+      <div class="gift-dot"></div>
+    </div>
+  </div>
+
+  <!-- 底部操作栏 -->
+  <div class="bottom-bar">
+    <input class="input-box" placeholder="说点什么...">
+    <button class="bottom-btn gift">
+      <span class="gift-icon">🎁</span>
+    </button>
+    <button class="bottom-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+        <path d="M15.5 8.5a4 4 0 01-5.6 5.6"/>
+        <path d="M6.5 17.5a4 4 0 015.6-5.6"/>
+        <circle cx="6" cy="6" r="2"/>
+        <circle cx="18" cy="6" r="2"/>
+        <circle cx="6" cy="18" r="2"/>
+        <circle cx="18" cy="18" r="2"/>
+      </svg>
+    </button>
+    <button class="bottom-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+        <path d="M4 4h16v4H4V4z"/>
+        <path d="M3 8h18l-1.5 12h-15L3 8z"/>
+      </svg>
+    </button>
+    <button class="bottom-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+        <line x1="4" y1="6" x2="20" y2="6"/>
+        <line x1="4" y1="12" x2="20" y2="12"/>
+        <line x1="4" y1="18" x2="20" y2="18"/>
+      </svg>
+      <div class="badge"></div>
+    </button>
+  </div>
+
+  <script>
+    // 简单的交互效果
+    document.querySelectorAll('.action-btn, .bottom-btn, .control-btn, .order-song-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 100);
+      });
+    });
+
+    // 模拟歌词滚动
+    let currentLine = 0;
+    const lyrics = [
+      '失去你我才知道要珍惜',
+      '当时无法为你写的那首歌',
+      '却是我永远的遗憾',
+      '当爱逝去如果所有的错',
+      '重来一次能否改变结局'
+    ];
+
+    setInterval(() => {
+      const line = document.querySelector('.lyrics-line');
+      if (line) {
+        currentLine = (currentLine + 1) % lyrics.length;
+        line.style.opacity = '0.5';
+        setTimeout(() => {
+          line.textContent = lyrics[currentLine];
+          line.style.opacity = '1';
+        }, 200);
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
