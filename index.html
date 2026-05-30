@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>TT语音K歌房</title>
@@ -23,17 +23,22 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a2e;
         }
 
+        /* 固定尺寸容器 */
         #app {
-            width: 375px;
-            height: 667px;
-            margin: 0 auto;
+            width: 390px;
+            height: 844px;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+            background: linear-gradient(180deg, #2d1b4e 0%, #1a0a2e 100%);
         }
 
+        /* 樱花背景 */
         .sakura-bg {
             position: absolute;
             top: 0;
@@ -43,7 +48,7 @@
             background-image: url('kefang-design.jpg');
             background-size: cover;
             background-position: center;
-            opacity: 0.4;
+            opacity: 0.35;
             z-index: 0;
         }
 
@@ -53,11 +58,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(ellipse at top, rgba(100, 50, 120, 0.3) 0%, transparent 50%),
-                        radial-gradient(ellipse at bottom, rgba(50, 30, 80, 0.5) 0%, transparent 60%);
+            background: radial-gradient(ellipse at top, rgba(100, 50, 120, 0.4) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(50, 30, 80, 0.6) 0%, transparent 60%);
             z-index: 1;
         }
 
+        /* 内容容器 */
         .content {
             position: relative;
             z-index: 2;
@@ -66,10 +72,11 @@
             flex-direction: column;
         }
 
+        /* 滚动区域 */
         .scroll-container {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 70px;
+            padding-bottom: 80px;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -77,15 +84,18 @@
             display: none;
         }
 
+        /* 按钮点击效果 */
         .btn-press:active {
             transform: scale(0.95);
-            opacity: 0.8;
+            opacity: 0.85;
+            transition: all 0.15s ease;
         }
 
+        /* 弹窗样式 */
         .modal-overlay {
-            position: fixed;
+            position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             z-index: 100;
             display: none;
             align-items: center;
@@ -99,9 +109,9 @@
 
         .modal {
             width: 90%;
-            max-width: 320px;
+            max-width: 340px;
             background: linear-gradient(180deg, #2d1b4e 0%, #1a0a2e 100%);
-            border-radius: 16px;
+            border-radius: 18px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
             animation: modalSlideIn 0.3s ease-out;
@@ -139,66 +149,87 @@
             animation: fadeIn 0.3s ease-out;
         }
 
+        /* 麦位指示器 */
         .mic-indicator {
             position: absolute;
-            bottom: -2px;
+            bottom: -3px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 8px;
+            padding: 1px 7px;
+            border-radius: 5px;
+            font-size: 9px;
             font-weight: bold;
             white-space: nowrap;
+        }
+
+        /* 顶部徽章 */
+        .room-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
 <body>
     <div id="app">
+        <!-- 背景层 -->
         <div class="sakura-bg"></div>
         <div class="sakura-overlay"></div>
         
+        <!-- 主内容 -->
         <div class="content">
+            <!-- 滚动内容区 -->
             <div class="scroll-container">
-                <!-- 顶部房间信息区 -->
-                <div class="px-3 pt-3 pb-2">
-                    <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
+                <!-- 顶部状态栏 -->
+                <div class="px-4 pt-5 pb-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <!-- 房间头像 -->
                             <div class="relative">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center border-2 border-purple-300">
+                                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center border-2 border-purple-300">
                                     <span class="text-white text-xs font-bold">微</span>
                                 </div>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-1">
-                                    <span class="text-white font-semibold text-sm">微质</span>
+                                <!-- 皇冠图标 -->
+                                <div class="absolute -top-2 -left-2 w-5 h-5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fbbf24">
+                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                    </svg>
                                 </div>
+                            </div>
+                            <!-- 房间信息 -->
+                            <div>
+                                <div class="text-white font-semibold text-sm">微质</div>
                                 <div class="text-white/60 text-xs">房间ID: 21173223</div>
                             </div>
-                            <button class="px-2.5 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full text-white text-xs font-medium btn-press">
+                            <!-- 一起K歌按钮 -->
+                            <button class="px-3 py-1.5 bg-white/10 border border-white/20 rounded-full text-white text-xs font-medium btn-press">
                                 一起K歌
                             </button>
                         </div>
+                        <!-- 右侧操作按钮 -->
                         <div class="flex items-center gap-2">
-                            <button class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnFavorite">
+                            <button class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnFavorite">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                 </svg>
                             </button>
-                            <button class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnShare">
+                            <button class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnShare">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                                     <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.39 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.39 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
                                 </svg>
                             </button>
-                            <button class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnClose">
+                            <button class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnClose">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                                 </svg>
                             </button>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 text-white/60 text-xs">
+                    <!-- 网络延迟和点赞数 -->
+                    <div class="flex items-center gap-4 mt-2 text-white/60 text-xs">
                         <span class="flex items-center gap-1">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                             47ms
@@ -206,43 +237,48 @@
                         <span class="flex items-center gap-1">
                             <span>今日点赞数:</span>
                             <span class="text-yellow-400">5</span>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#fbbf24">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#fbbf24">
                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                             </svg>
                         </span>
+                        <button class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center btn-press">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="white/60">
+                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
-                <!-- 标签和社群信息区 -->
-                <div class="px-3 mb-2">
-                    <div class="flex items-center justify-between mb-1.5">
+                <!-- 标签和社群信息 -->
+                <div class="px-4 mb-3">
+                    <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 bg-white/15 rounded-full text-white/80 text-xs"># dd</span>
-                            <span class="px-2 py-0.5 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full text-white text-xs flex items-center gap-0.5">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
+                            <span class="px-2.5 py-1 bg-white/15 rounded-full text-white/80 text-xs"># dd</span>
+                            <span class="px-2.5 py-1 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full text-white text-xs flex items-center gap-1">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="white">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
                                 我的段位
                             </span>
                         </div>
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center border border-white/20 overflow-hidden">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="12" height="12"/>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center border border-white/20 overflow-hidden">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="14" height="14"/>
                             </div>
-                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-white/20 overflow-hidden">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z'/%3E%3C/svg%3E" width="12" height="12"/>
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-white/20 overflow-hidden">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z'/%3E%3C/svg%3E" width="14" height="14"/>
                             </div>
-                            <span class="px-1.5 py-0.5 bg-white/20 rounded-lg text-white/80 text-[10px]">1人麦下</span>
+                            <span class="px-2 py-0.5 bg-white/20 rounded-lg text-white/80 text-xs">1人麦下</span>
                         </div>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="px-2 py-0.5 bg-white/15 rounded-full text-white/80 text-xs">质量独唱</span>
-                        <button class="flex items-center gap-1 px-2 py-1 bg-white/15 rounded-lg text-white/80 text-xs btn-press" id="btnCommunity">
-                            <div class="w-5 h-5 rounded bg-white/30 flex items-center justify-center">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Crect x='3' y='3' width='7' height='7'/%3E%3Crect x='14' y='3' width='7' height='7'/%3E%3Crect x='14' y='14' width='7' height='7'/%3E%3Crect x='3' y='14' width='7' height='7'/%3E%3C/svg%3E" width="10" height="10"/>
+                        <span class="px-2.5 py-1 bg-white/15 rounded-full text-white/80 text-xs">质量独唱</span>
+                        <button class="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/15 rounded-lg text-white/80 text-xs btn-press" id="btnCommunity">
+                            <div class="w-6 h-6 rounded bg-white/30 flex items-center justify-center">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Crect x='3' y='3' width='7' height='7'/%3E%3Crect x='14' y='3' width='7' height='7'/%3E%3Crect x='14' y='14' width='7' height='7'/%3E%3Crect x='3' y='14' width='7' height='7'/%3E%3C/svg%3E" width="12" height="12"/>
                             </div>
                             <span>暗恋Sec</span>
-                            <svg width="8" height="8" viewBox="0 0 24 24" fill="white">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
                                 <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                             </svg>
                         </button>
@@ -250,62 +286,71 @@
                 </div>
 
                 <!-- K歌核心区 -->
-                <div class="px-3 mb-2">
+                <div class="px-4 mb-3">
                     <div class="relative">
-                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                        <!-- 顶部徽章 -->
+                        <div class="room-badge">
                             <div class="relative">
                                 <div class="flex items-center gap-0.5 justify-center mb-0.5">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fef3c7" filter="drop-shadow(0 1px 2px rgba(251,191,36,0.5))">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#fef3c7" filter="drop-shadow(0 1px 3px rgba(251,191,36,0.5))">
                                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                     </svg>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" filter="drop-shadow(0 2px 4px rgba(251,191,36,0.7))">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fbbf24" filter="drop-shadow(0 2px 5px rgba(251,191,36,0.7))">
                                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                     </svg>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fef3c7" filter="drop-shadow(0 1px 2px rgba(251,191,36,0.5))">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#fef3c7" filter="drop-shadow(0 1px 3px rgba(251,191,36,0.5))">
                                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                     </svg>
                                 </div>
-                                <div class="px-3 py-0.5 bg-gradient-to-b from-purple-300 via-purple-400 to-purple-600 rounded text-white text-[10px] font-bold text-center border border-white/50 shadow-lg whitespace-nowrap">
+                                <div class="px-4 py-1 bg-gradient-to-b from-purple-300 via-purple-400 to-purple-600 rounded text-white text-xs font-bold text-center border border-white/50 shadow-lg whitespace-nowrap">
                                     北京第十三薛之谦
                                 </div>
                             </div>
                         </div>
-                        <div class="relative rounded-2xl border-2 border-purple-500/50 bg-black/40 overflow-hidden">
-                            <div class="h-40 relative">
-                                <div class="absolute inset-0 bg-gradient-to-b from-purple-900/30 to-purple-900/60"></div>
-                                <div class="absolute top-2 right-2 text-right">
-                                    <div class="text-white/70 text-[10px]">当前得分</div>
-                                    <div class="text-yellow-400 text-2xl font-bold">1826</div>
+                        <!-- 主卡片 -->
+                        <div class="relative rounded-2xl border-2 border-purple-500/50 bg-black/50 overflow-hidden mt-12">
+                            <div class="h-44 relative">
+                                <div class="absolute inset-0 bg-gradient-to-b from-purple-900/40 to-purple-900/70"></div>
+                                <!-- 当前得分 -->
+                                <div class="absolute top-3 right-3 text-right">
+                                    <div class="text-white/70 text-xs">当前得分</div>
+                                    <div class="text-yellow-400 text-3xl font-bold">1826</div>
                                 </div>
-                                <div class="absolute bottom-2 left-2">
-                                    <div class="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center border border-white/20 overflow-hidden singing-avatar">
-                                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="12" height="12"/>
+                                <!-- 歌手头像 -->
+                                <div class="absolute bottom-3 left-3">
+                                    <div class="w-9 h-9 rounded-full bg-black/50 flex items-center justify-center border border-white/20 overflow-hidden singing-avatar">
+                                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="14" height="14"/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="py-3 px-4 text-center">
-                                <div class="text-yellow-400 text-base font-semibold mb-1">失去你我才知道要珍惜</div>
-                                <div class="text-white/50 text-sm mb-0.5">当时无法</div>
+                            <!-- 歌词区域 -->
+                            <div class="py-4 px-4 text-center">
+                                <div class="text-yellow-400 text-lg font-semibold mb-2">失去你我才知道要珍惜</div>
+                                <div class="text-white/50 text-sm mb-1">当时无法</div>
                                 <div class="text-white/40 text-xs">为你写的那首歌</div>
                             </div>
-                            <div class="flex items-center justify-between px-3 py-2 border-t border-white/10 bg-black/30">
-                                <button class="flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-purple-600 to-purple-500 rounded-full text-white text-[10px] font-medium btn-press" id="btnSingAlong">
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="#fbbf24">
+                            <!-- 底部控制栏 -->
+                            <div class="flex items-center justify-between px-4 py-3 border-t border-white/10 bg-black/40">
+                                <!-- 默默跟唱 -->
+                                <button class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-500 rounded-full text-white text-xs font-medium btn-press" id="btnSingAlong">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#fbbf24">
                                         <path d="M8 5v14l11-7z"/>
                                     </svg>
                                     <span>默默跟唱</span>
-                                    <svg width="8" height="8" viewBox="0 0 24 24" fill="white">
+                                    <svg width="9" height="9" viewBox="0 0 24 24" fill="white">
                                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                                     </svg>
                                 </button>
-                                <button class="flex items-center gap-1 text-white/60 text-[10px] btn-press" id="btnOriginal">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                <!-- 原唱开关 -->
+                                <button class="flex items-center gap-1 text-white/60 text-xs btn-press" id="btnOriginal">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                     </svg>
                                     <span>原唱:关</span>
                                 </button>
-                                <div class="flex items-center gap-1 text-white/60 text-[10px]">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                <!-- 歌曲名 -->
+                                <div class="flex items-center gap-1 text-white/60 text-xs">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M8 5v14l11-7z"/>
                                     </svg>
                                     <span>Melody (伴奏)</span>
@@ -316,116 +361,107 @@
                 </div>
 
                 <!-- 点歌信息区 -->
-                <div class="px-3 mb-2">
+                <div class="px-4 mb-3">
                     <div class="flex items-center justify-between">
                         <div>
                             <button class="flex items-center gap-1 text-white font-medium text-sm btn-press" id="btnSongList">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="#f97316">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="#f97316">
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
                                 <span>已点(2)</span>
-                                <svg width="8" height="8" viewBox="0 0 24 24" fill="white">
+                                <svg width="9" height="9" viewBox="0 0 24 24" fill="white">
                                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                                 </svg>
                             </button>
-                            <div class="text-white/60 text-[10px] mt-0.5">下一首:没那么简单 (DJ阿lo版)</div>
+                            <div class="text-white/60 text-xs mt-1">下一首:没那么简单 (DJ阿lo版)</div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button class="flex items-center gap-1 px-2 py-1 bg-white/15 rounded-full text-white/80 text-[10px] btn-press">
-                                <div class="w-4 h-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
-                                    <svg width="8" height="8" viewBox="0 0 24 24" fill="white">
+                            <!-- 沙滩恋歌杯 -->
+                            <button class="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/15 rounded-full text-white/80 text-xs btn-press">
+                                <div class="w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
                                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                     </svg>
                                 </div>
                                 <div class="text-left">
-                                    <div class="text-white text-[10px] font-medium">沙滩恋歌杯</div>
-                                    <div class="text-white/60 text-[8px]">33.8万人参与</div>
+                                    <div class="text-white text-xs font-medium">沙滩恋歌杯</div>
+                                    <div class="text-white/60 text-[10px]">33.8万人参与</div>
                                 </div>
                             </button>
-                            <button class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-500 rounded-full text-white text-sm font-medium btn-press" id="btnRequest">
-                                点歌
-                            </button>
+                            <!-- 点歌按钮 -->
+                            <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-500 rounded-full text-white text-sm font-medium btn-press" id="btnRequest">点歌</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- 麦位区 -->
-                <div class="px-3 mb-2">
+                <div class="px-4 mb-3">
                     <div class="flex items-center justify-between">
                         <!-- 麦位1 - 演唱中 -->
                         <div class="relative" id="mic1">
-                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-2 border-yellow-500/50 flex items-center justify-center overflow-hidden singing-avatar">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="14" height="14"/>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-2 border-yellow-500/50 flex items-center justify-center overflow-hidden singing-avatar">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="16" height="16"/>
                             </div>
-                            <div class="mic-indicator bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-                                演唱
-                            </div>
-                            <div class="absolute -top-1 -left-1 w-3.5 h-3.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
-                                <svg width="7" height="7" viewBox="0 0 24 24" fill="#fbbf24">
+                            <div class="mic-indicator bg-gradient-to-r from-orange-500 to-orange-600 text-white">演唱</div>
+                            <div class="absolute -top-1.5 -left-1.5 w-4 h-4 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="#fbbf24">
                                     <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                                 </svg>
                             </div>
                         </div>
-                        
                         <!-- 麦位2 - 空 -->
                         <div class="relative" id="mic2">
-                            <div class="w-9 h-9 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="white/50">
+                            <div class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="white/50">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
                             </div>
                         </div>
-                        
                         <!-- 麦位3 - 空 -->
                         <div class="relative" id="mic3">
-                            <div class="w-9 h-9 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="white/50">
+                            <div class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="white/50">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
                             </div>
                         </div>
-                        
                         <!-- 麦位4 - 空 -->
                         <div class="relative" id="mic4">
-                            <div class="w-9 h-9 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="white/50">
+                            <div class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="white/50">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
                             </div>
                         </div>
-                        
                         <!-- 麦位5 - 有人 -->
                         <div class="relative" id="mic5">
-                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-2 border-green-500 flex items-center justify-center overflow-hidden">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="14" height="14"/>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-2 border-green-500 flex items-center justify-center overflow-hidden">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="16" height="16"/>
                             </div>
                         </div>
-                        
                         <!-- 麦位6 - 空 -->
                         <div class="relative" id="mic6">
-                            <div class="w-9 h-9 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="white/50">
+                            <div class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="white/50">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
                             </div>
                         </div>
-                        
                         <!-- 麦位7 - 空 -->
                         <div class="relative" id="mic7">
-                            <div class="w-9 h-9 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="white/50">
+                            <div class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="white/50">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
                             </div>
                         </div>
-                        
                         <!-- 麦位8 - 有人 -->
                         <div class="relative" id="mic8">
-                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-2 border-purple-400 flex items-center justify-center overflow-hidden">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="14" height="14"/>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-2 border-purple-400 flex items-center justify-center overflow-hidden">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3C/svg%3E" width="16" height="16"/>
                             </div>
-                            <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                                <svg width="7" height="7" viewBox="0 0 24 24" fill="white">
+                            <div class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="white">
                                     <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                                 </svg>
                             </div>
@@ -434,91 +470,102 @@
                 </div>
 
                 <!-- 聊天区 -->
-                <div class="px-3 pb-3" id="chatArea">
+                <div class="px-4 pb-4" id="chatArea">
                     <div class="text-white/50 text-xs mb-2">我 进入房间</div>
+                    <!-- 消息1 -->
                     <div class="mb-2 message-item">
-                        <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2">
-                            <div class="flex items-center gap-1.5 mb-1">
-                                <span class="px-1.5 py-0.5 bg-orange-500 rounded text-white text-[8px] font-bold">房主</span>
+                        <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2.5">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="px-1.5 py-0.5 bg-orange-500 rounded text-white text-[9px] font-bold">房主</span>
                                 <span class="text-yellow-400 text-xs font-semibold">是洛诗丫:</span>
                             </div>
                             <div class="text-white/90 text-xs">欢迎@CHANGE OF HEART，一起聊聊吧~</div>
-                            <div class="flex items-center gap-1.5 mt-1.5">
-                                <button class="px-2 py-0.5 bg-white/15 rounded-full text-white/70 text-[10px] btn-press">+1</button>
+                            <div class="flex items-center gap-1.5 mt-2">
+                                <button class="px-2.5 py-1 bg-white/15 rounded-full text-white/70 text-[10px] btn-press">+1</button>
                             </div>
                         </div>
                     </div>
+                    <!-- 消息2 -->
                     <div class="mb-2 message-item">
-                        <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2">
-                            <div class="flex items-center gap-1.5 mb-1">
-                                <span class="px-1.5 py-0.5 bg-orange-500 rounded text-white text-[8px] font-bold">房主</span>
+                        <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2.5">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="px-1.5 py-0.5 bg-orange-500 rounded text-white text-[9px] font-bold">房主</span>
                                 <span class="text-yellow-400 text-xs font-semibold">是洛诗丫:</span>
                             </div>
                             <div class="text-white/90 text-xs">欢迎@尼尔巴斯哥哥，一起聊聊吧~</div>
-                            <div class="flex items-center gap-1.5 mt-1.5">
-                                <button class="px-2 py-0.5 bg-blue-500 rounded-full text-white text-[10px] btn-press">打招呼</button>
+                            <div class="flex items-center gap-1.5 mt-2">
+                                <button class="px-2.5 py-1 bg-blue-500 rounded-full text-white text-[10px] btn-press">打招呼</button>
                             </div>
                         </div>
                     </div>
+                    <!-- 消息3 -->
                     <div class="mb-2 message-item">
-                        <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2">
-                            <div class="flex items-center gap-1.5 mb-1">
-                                <span class="px-1.5 py-0.5 bg-orange-500 rounded text-white text-[8px] font-bold">房主</span>
+                        <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2.5">
+                            <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="px-1.5 py-0.5 bg-orange-500 rounded text-white text-[9px] font-bold">房主</span>
                                 <span class="text-yellow-400 text-xs font-semibold">是洛诗丫:</span>
                             </div>
                             <div class="text-white/90 text-xs">@尼尔巴斯哥哥 来成为暗恋Secret love厂牌的一员吧</div>
-                            <div class="flex items-center gap-1.5 mt-1.5">
-                                <button class="px-2 py-0.5 bg-blue-500 rounded-full text-white text-[10px] btn-press">加入厂牌</button>
+                            <div class="flex items-center gap-1.5 mt-2">
+                                <button class="px-2.5 py-1 bg-blue-500 rounded-full text-white text-[10px] btn-press">加入厂牌</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 底部操作区 -->
-            <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[375px] bg-black/90 px-2.5 py-2 flex items-center gap-1.5 border-t border-white/10 z-10">
-                <div class="flex-1 bg-white/15 rounded-full px-3 py-1.5 flex items-center" id="btnInput">
-                    <input type="text" placeholder="说点什么..." class="flex-1 bg-transparent border-none outline-none text-white text-xs placeholder-white/40" id="messageInput"/>
+            <!-- 底部操作栏 -->
+            <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[390px] bg-black/95 px-3 py-2.5 flex items-center gap-2 border-t border-white/10 z-10">
+                <!-- 输入框 -->
+                <div class="flex-1 bg-white/15 rounded-full px-4 py-2 flex items-center" id="btnInput">
+                    <input type="text" placeholder="说点什么..." class="flex-1 bg-transparent border-none outline-none text-white text-sm placeholder-white/40 focus:placeholder-white/60" id="messageInput"/>
                 </div>
-                <button class="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center btn-press gift-btn" id="btnGift">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <!-- 礼物按钮 -->
+                <button class="w-9 h-9 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center btn-press gift-btn" id="btnGift">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                         <path d="M20,12H22V10H20V12M18,10H16V6H14V10H10V6H8V10H6V12H8V21H16V12H18V10M9,12H7V14H9V12M15,14V12H17V14H15M9,16V18H7V16H9M15,18V16H17V18H15M12,8L10.5,6.5L12,5L13.5,6.5L12,8M12,3.5L9,5H7.5C6.12,5 5,6.12 5,7.5C5,8.88 6.12,10 7.5,10H9V9H7.5C6.67,9 6,8.33 6,7.5C6,6.67 6.67,6 7.5,6H9L12,3.5M12,3.5L15,5H16.5C17.88,5 19,6.12 19,7.5C19,8.88 17.88,10 16.5,10H15V9H16.5C17.33,9 18,8.33 18,7.5C18,6.67 17.33,6 16.5,6H15L12,3.5Z"/>
                     </svg>
                 </button>
-                <button class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnVolume">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <!-- 音量按钮 -->
+                <button class="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnVolume">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                         <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"/>
                     </svg>
                 </button>
-                <button class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnMessages">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <!-- 消息按钮 -->
+                <button class="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnMessages">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9 2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
                 </button>
-                <button class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnSettings">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <!-- 更多按钮 -->
+                <button class="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center btn-press" id="btnSettings">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                     </svg>
                 </button>
             </div>
 
             <!-- 右侧悬浮按钮 -->
-            <div class="fixed right-2.5 bottom-20 flex flex-col gap-2.5 z-10">
-                <button class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-500 flex items-center justify-center shadow-lg btn-press" id="btnCall">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+            <div class="fixed right-3 bottom-24 flex flex-col gap-3 z-10">
+                <!-- 打Call按钮 -->
+                <button class="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-500 flex items-center justify-center shadow-lg btn-press" id="btnCall">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                         <path d="M9.5,7C10.33,7 11,7.67 11,8.5V11H14C14.55,11 15,11.45 15,12V13C15,13.55 14.55,14 14,14H11V15.5C11,16.33 10.33,17 9.5,17H7C6.45,17 6,16.55 6,16V13C6,12.45 6.45,12 7,12H8.5V9.5C8.5,8.67 9.17,8 10,8C10.55,8 11,7.55 11,7C10.55,7 10,7.45 9.5,7M17.5,7C18.33,7 19,7.67 19,8.5V11H20C20.55,11 21,11.45 21,12V13C21,13.55 20.55,14 20,14H19V15.5C19,16.33 18.33,17 17.5,17H16C15.45,17 15,16.55 15,16V13C15,12.45 15.45,12 16,12H17.5V9.5C17.5,8.67 18.17,8 19,8C19.55,8 20,7.55 20,7C19.55,7 19,7.45 18.5,7C18.5,7 18,7 17.5,7M5,5V19H3V5H5M21,5V19H19V5H21Z"/>
                     </svg>
                 </button>
-                <button class="relative w-10.5 h-10.5 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg btn-press" id="btnQuickGift">
-                    <div class="w-8.5 h-8.5 rounded-full bg-gradient-to-br from-pink-400 to-purple-600 flex items-center justify-center">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <!-- 快速礼物按钮 -->
+                <button class="relative w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg btn-press" id="btnQuickGift">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-600 flex items-center justify-center">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
                     </div>
-                    <div class="absolute -top-1 -right-1 px-1 py-0.5 bg-red-500 rounded-full text-white text-[7px] font-bold whitespace-nowrap">0.1元自选</div>
+                    <div class="absolute -top-1 -right-1 px-1.5 py-0.5 bg-red-500 rounded-full text-white text-[8px] font-bold whitespace-nowrap">0.1元自选</div>
                 </button>
-                <button class="w-10.5 h-10.5 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg btn-press" id="btnBlackGroup">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <!-- 开黑专属按钮 -->
+                <button class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg btn-press" id="btnBlackGroup">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                 </button>
@@ -535,7 +582,7 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="px-4 py-4" id="modalContent">
+                    <div class="px-4 py-4 max-h-80 overflow-y-auto" id="modalContent">
                     </div>
                 </div>
             </div>
@@ -543,6 +590,7 @@
     </div>
 
     <script>
+        // DOM元素引用
         const modalOverlay = document.getElementById('modalOverlay');
         const modalTitle = document.getElementById('modalTitle');
         const modalContent = document.getElementById('modalContent');
@@ -550,22 +598,27 @@
         const messageInput = document.getElementById('messageInput');
         const chatArea = document.getElementById('chatArea');
 
+        // 打开弹窗
         function openModal(title, content) {
             modalTitle.textContent = title;
             modalContent.innerHTML = content;
             modalOverlay.classList.add('active');
         }
 
+        // 关闭弹窗
         function closeModal() {
             modalOverlay.classList.remove('active');
         }
 
+        // 弹窗关闭事件
         modalClose.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) closeModal();
         });
 
-        // 收藏房间
+        // ==================== 交互功能实现 ====================
+
+        // 1. 收藏房间
         document.getElementById('btnFavorite').addEventListener('click', () => {
             openModal('收藏房间', `
                 <div class="text-center">
@@ -580,7 +633,7 @@
             `);
         });
 
-        // 分享房间
+        // 2. 分享房间
         document.getElementById('btnShare').addEventListener('click', () => {
             openModal('分享房间', `
                 <div class="grid grid-cols-3 gap-3 mb-4">
@@ -624,7 +677,7 @@
             `);
         });
 
-        // 关闭房间
+        // 3. 退出房间
         document.getElementById('btnClose').addEventListener('click', () => {
             openModal('退出房间', `
                 <div class="text-center">
@@ -642,7 +695,7 @@
             `);
         });
 
-        // 社群
+        // 4. 社群信息
         document.getElementById('btnCommunity').addEventListener('click', () => {
             openModal('暗恋Secret love', `
                 <div class="flex items-center gap-3 mb-4">
@@ -674,7 +727,7 @@
             `);
         });
 
-        // 默默跟唱
+        // 5. 默默跟唱
         document.getElementById('btnSingAlong').addEventListener('click', () => {
             openModal('默默跟唱', `
                 <div class="text-center">
@@ -692,7 +745,7 @@
             `);
         });
 
-        // 原唱开关
+        // 6. 原唱开关
         document.getElementById('btnOriginal').addEventListener('click', () => {
             openModal('原唱开关', `
                 <div class="text-center">
@@ -705,7 +758,7 @@
             `);
         });
 
-        // 点歌
+        // 7. 点歌台
         document.getElementById('btnRequest').addEventListener('click', () => {
             openModal('点歌台', `
                 <div class="mb-4">
@@ -788,7 +841,7 @@
             `);
         });
 
-        // 已点列表
+        // 8. 已点列表
         document.getElementById('btnSongList').addEventListener('click', () => {
             openModal('已点歌曲', `
                 <div class="mb-4">
@@ -824,7 +877,7 @@
             `);
         });
 
-        // 发送消息
+        // 9. 发送消息
         messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && messageInput.value.trim()) {
                 sendMessage();
@@ -838,8 +891,8 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = 'mb-2 message-item';
             messageDiv.innerHTML = `
-                <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2">
-                    <div class="flex items-center gap-1.5 mb-1">
+                <div class="bg-white/10 rounded-br-xl rounded-tr-xl rounded-tl-none px-3 py-2.5">
+                    <div class="flex items-center gap-1.5 mb-1.5">
                         <span class="text-yellow-400 text-xs font-semibold">我:</span>
                     </div>
                     <div class="text-white/90 text-xs">${text}</div>
@@ -848,12 +901,11 @@
             chatArea.appendChild(messageDiv);
             messageInput.value = '';
             
-            // 滚动到底部
             const scrollContainer = document.querySelector('.scroll-container');
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
         }
 
-        // 礼物按钮
+        // 10. 礼物商店
         document.getElementById('btnGift').addEventListener('click', () => {
             openModal('礼物商店', `
                 <div class="grid grid-cols-4 gap-2 mb-4">
@@ -871,7 +923,7 @@
             `);
         });
 
-        // 快速礼物
+        // 11. 快速礼物
         document.getElementById('btnQuickGift').addEventListener('click', () => {
             openModal('0.1元自选礼物', `
                 <div class="text-center">
@@ -892,9 +944,8 @@
             `);
         });
 
-        // 打Call
+        // 12. 打Call按钮
         document.getElementById('btnCall').addEventListener('click', () => {
-            // 简单的动画效果
             const btn = document.getElementById('btnCall');
             btn.style.transform = 'scale(1.2)';
             setTimeout(() => {
@@ -902,7 +953,7 @@
             }, 200);
         });
 
-        // 黑粉
+        // 13. 开黑专属
         document.getElementById('btnBlackGroup').addEventListener('click', () => {
             openModal('房间管理', `
                 <div class="space-y-3">
