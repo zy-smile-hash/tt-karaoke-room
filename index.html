@@ -3,72 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#1a0a2e">
     <title>TT语音K歌房</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=PingFang+SC:wght@400;500;600;700&display=swap');
+        
         * {
+            font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html, body {
+            width: 375px;
+            height: 667px;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+            background: #1a0a2e;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .phone-frame {
+        .phone-container {
             width: 375px;
-            height: 812px;
-            background: #000;
-            border-radius: 50px;
-            padding: 15px;
-            box-shadow: 
-                0 50px 100px rgba(0, 0, 0, 0.5),
-                0 0 0 2px #333,
-                inset 0 0 0 2px #111;
-            position: relative;
-        }
-
-        .phone-frame::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 30px;
-            background: #000;
-            border-radius: 0 0 20px 20px;
-            z-index: 100;
-        }
-
-        .phone-screen {
-            width: 100%;
-            height: 100%;
+            height: 667px;
             background: linear-gradient(180deg, #1a0a2e 0%, #4a1f5c 50%, #2d1b4e 100%);
-            border-radius: 40px;
-            overflow-y: auto;
-            overflow-x: hidden;
             position: relative;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .phone-screen::-webkit-scrollbar {
-            display: none;
-        }
-
-        .content-wrapper {
-            position: relative;
-            padding-bottom: 100px;
+            overflow: hidden;
         }
 
         .sakura-bg {
@@ -93,11 +51,23 @@
             pointer-events: none;
         }
 
+        .scrollable-content {
+            height: calc(100% - 140px);
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .scrollable-content::-webkit-scrollbar {
+            display: none;
+        }
+
         .status-bar {
+            padding-top: 44px;
+            padding-left: 16px;
+            padding-right: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 50px 16px 12px;
             color: white;
             font-size: 18px;
             font-weight: 600;
@@ -108,14 +78,6 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-        }
-
-        .status-icon {
-            flex-shrink: 0;
-        }
-
-        .status-text {
-            font-weight: 600;
         }
 
         .battery {
@@ -129,20 +91,13 @@
 
         .room-header {
             padding: 0 16px;
-            margin-bottom: 16px;
+            margin-top: 8px;
         }
 
         .room-info {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-        }
-
-        .host-info-wrapper {
-            display: flex;
             align-items: center;
-            gap: 10px;
-            flex: 1;
         }
 
         .host-info {
@@ -151,24 +106,25 @@
             gap: 10px;
         }
 
+        .avatar-wrapper {
+            position: relative;
+        }
+
         .avatar {
             width: 44px;
             height: 44px;
             border-radius: 50%;
             border: 3px solid #a855f7;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            position: relative;
-            flex-shrink: 0;
         }
 
-        .avatar::before {
-            content: '';
+        .avatar-badge {
             position: absolute;
             top: -6px;
             left: -6px;
             width: 18px;
             height: 18px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fbbf24'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z'/%3E%3C/svg%3E") center/contain no-repeat;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239333ea'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z'/%3E%3C/svg%3E") center/contain no-repeat;
         }
 
         .host-name {
@@ -194,14 +150,12 @@
             padding: 6px 14px;
             color: white;
             font-size: 12px;
-            flex-shrink: 0;
-            margin-left: 4px;
+            margin-left: 8px;
         }
 
         .header-actions {
             display: flex;
             gap: 6px;
-            justify-content: flex-end;
         }
 
         .action-btn {
@@ -221,12 +175,6 @@
             transform: scale(1.1);
         }
 
-        .action-btn svg {
-            width: 17px;
-            height: 17px;
-            fill: white;
-        }
-
         .room-meta {
             display: flex;
             align-items: center;
@@ -238,22 +186,13 @@
 
         .tags-bar {
             padding: 0 16px;
-            margin-bottom: 12px;
+            margin-top: 12px;
         }
 
         .tags-row {
             display: flex;
             gap: 8px;
             margin-bottom: 8px;
-        }
-
-        .tags-row:last-child {
-            margin-bottom: 0;
-            justify-content: space-between;
-        }
-
-        .tags-row:first-child {
-            justify-content: space-between;
         }
 
         .tag {
@@ -268,6 +207,9 @@
         .tag.mic {
             background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
             color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .online-count {
@@ -276,7 +218,6 @@
             padding: 4px 10px;
             color: rgba(255, 255, 255, 0.8);
             font-size: 11px;
-            white-space: nowrap;
         }
 
         .factory-info {
@@ -288,17 +229,25 @@
             padding: 4px 10px;
             color: rgba(255, 255, 255, 0.8);
             font-size: 11px;
-            white-space: nowrap;
             cursor: pointer;
-            transition: all 0.2s ease;
+            margin-left: auto;
         }
 
-        .factory-info:hover, .factory-info:active {
-            background: rgba(255, 255, 255, 0.2);
+        .mic-avatars-row {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .mic-avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .karaoke-area {
-            margin: 0 16px;
+            margin: 12px 16px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 18px;
             border: 2px solid rgba(168, 85, 247, 0.5);
@@ -312,70 +261,30 @@
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(180deg, #c4b5fd 0%, #a78bfa 30%, #8b5cf6 70%, #7c3aed 100%);
-            padding: 10px 28px;
+            padding: 8px 24px;
             border-radius: 4px;
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             border: 2px solid rgba(255, 255, 255, 0.5);
             white-space: nowrap;
             z-index: 10;
-            box-shadow: 
-                0 4px 20px rgba(168, 85, 247, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 2px;
-        }
-
-        .header-decorations {
-            position: absolute;
-            top: -32px;
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
+            gap: 6px;
         }
 
         .decoration-star {
-            width: 32px;
-            height: 32px;
+            width: 20px;
+            height: 20px;
             fill: #fbbf24;
-            filter: drop-shadow(0 2px 6px rgba(251, 191, 36, 0.7));
-        }
-
-        .decoration-star.left,
-        .decoration-star.right {
-            width: 20px;
-            height: 20px;
-            fill: #fef3c7;
-            filter: drop-shadow(0 1px 4px rgba(251, 191, 36, 0.5));
-            margin-bottom: 6px;
-        }
-
-        .karaoke-header::before,
-        .karaoke-header::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fbbf24'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z'/%3E%3C/svg%3E") center/contain no-repeat;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-
-        .karaoke-header::before {
-            left: -12px;
-        }
-
-        .karaoke-header::after {
-            right: -12px;
+            filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.7));
         }
 
         .karaoke-video {
-            height: 160px;
+            height: 140px;
             background: rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
@@ -394,7 +303,7 @@
         .current-score {
             position: absolute;
             right: 14px;
-            top: 18px;
+            top: 14px;
             text-align: right;
         }
 
@@ -407,37 +316,49 @@
         .current-score span:last-child {
             display: block;
             color: #fbbf24;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
         }
 
+        .singer-avatar {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #f97316;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
         .lyrics-area {
-            padding: 20px 16px;
+            padding: 16px;
             text-align: center;
         }
 
         .lyric-line {
-            font-size: 18px;
-            line-height: 1.7;
+            font-size: 16px;
+            line-height: 1.8;
         }
 
         .lyric-line.active {
             color: #fbbf24;
             font-weight: 600;
+            font-size: 18px;
         }
 
         .lyric-line.inactive {
             color: rgba(255, 255, 255, 0.4);
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .karaoke-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            gap: 10px;
+            gap: 8px;
         }
 
         .sing-along {
@@ -445,25 +366,27 @@
             align-items: center;
             gap: 6px;
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
-            padding: 6px 14px;
-            border-radius: 18px;
+            padding: 6px 12px;
+            border-radius: 16px;
             color: white;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            flex-shrink: 0;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .sing-along:hover, .sing-along:active {
+        .sing-along:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
         }
 
-        .sing-along svg {
-            width: 15px;
-            height: 15px;
-            fill: #fbbf24;
+        .original-switch {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            cursor: pointer;
         }
 
         .song-info {
@@ -474,33 +397,12 @@
 
         .song-title {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
         }
 
-        .original-switch {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 11px;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .original-switch:hover, .original-switch:active {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .original-switch svg {
-            width: 15px;
-            height: 15px;
-            fill: rgba(255, 255, 255, 0.6);
-        }
-
         .song-request-area {
-            padding: 14px 16px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -510,22 +412,16 @@
         .request-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
 
         .request-info span:first-child {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-        }
-
-        .request-info span:first-child svg {
-            width: 15px;
-            height: 15px;
-            fill: #f97316;
         }
 
         .request-info span:last-child {
@@ -536,52 +432,78 @@
         .request-btn {
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
             border: none;
-            border-radius: 18px;
-            padding: 8px 18px;
+            border-radius: 16px;
+            padding: 8px 16px;
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            flex-shrink: 0;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .request-btn:hover, .request-btn:active {
+        .request-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
+        }
+
+        .activity-badge {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .activity-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 11px;
+        }
+
+        .activity-count {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
         }
 
         .mic-positions {
             display: flex;
             justify-content: space-between;
-            padding: 0 4px;
-            margin-bottom: 14px;
-            gap: 0;
+            padding: 0 12px;
+            margin-top: 12px;
         }
 
         .mic-position {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            gap: 3px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .mic-position:hover, .mic-position:active {
+        .mic-position:hover {
             transform: scale(1.1);
         }
 
         .mic-wrapper {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
         .mic-wrapper.active {
@@ -589,60 +511,50 @@
             background: rgba(34, 197, 94, 0.2);
         }
 
-        .mic-wrapper.singing {
-            border-color: #f97316;
-            background: rgba(249, 115, 22, 0.2);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-        }
-
-        .mic-wrapper svg {
-            width: 12px;
-            height: 12px;
-            fill: rgba(255, 255, 255, 0.5);
-        }
-
-        .mic-wrapper.active svg,
-        .mic-wrapper.singing svg {
-            fill: white;
-        }
-
-        .mic-avatar {
-            width: 30px;
-            height: 30px;
+        .mic-position-avatar {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            border: 3px solid #a855f7;
+            border: 2px solid #a855f7;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             position: relative;
         }
 
-        .mic-avatar.singing::after {
+        .mic-position-avatar.singing {
+            border-color: #f97316;
+        }
+
+        .mic-position-avatar.singing::after {
             content: '演唱';
             position: absolute;
-            bottom: 3px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
             background: #f97316;
-            padding: 1px 5px;
-            border-radius: 6px;
+            padding: 1px 4px;
+            border-radius: 4px;
             color: white;
             font-size: 7px;
             font-weight: 600;
             white-space: nowrap;
-            letter-spacing: 0.3px;
         }
 
-        .mic-avatar.ready {
+        .mic-position-avatar.ready {
             border-color: #22c55e;
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 16px;
+            height: 16px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b5cf6'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z'/%3E%3C/svg%3E") center/contain no-repeat;
         }
 
         .chat-area {
             padding: 0 16px;
-            margin-bottom: 20px;
+            margin-top: 16px;
         }
 
         .enter-message {
@@ -694,7 +606,6 @@
             display: flex;
             gap: 6px;
             margin-top: 6px;
-            flex-wrap: wrap;
         }
 
         .message-action {
@@ -707,7 +618,7 @@
             transition: all 0.2s ease;
         }
 
-        .message-action:hover, .message-action:active {
+        .message-action:hover {
             background: rgba(255, 255, 255, 0.2);
         }
 
@@ -717,10 +628,11 @@
         }
 
         .bottom-bar {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
+            width: 375px;
             background: rgba(10, 10, 20, 0.95);
             padding: 10px 6px;
             padding-bottom: 30px;
@@ -740,11 +652,6 @@
             align-items: center;
             min-height: 32px;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .input-area:hover {
-            background: rgba(255, 255, 255, 0.15);
         }
 
         .input-area input {
@@ -767,12 +674,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .bottom-action:hover, .bottom-action:active {
+        .bottom-action:hover {
             transform: scale(1.15);
         }
 
@@ -784,9 +690,30 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .bottom-action svg {
-            width: 14px;
-            height: 14px;
+        .call-button {
+            position: fixed;
+            right: 16px;
+            bottom: 80px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+
+        .call-button:hover {
+            transform: scale(1.1);
+        }
+
+        .call-button svg {
+            width: 32px;
+            height: 32px;
             fill: white;
         }
 
@@ -830,7 +757,7 @@
         }
 
         .modal-header {
-            padding: 20px 20px 16px;
+            padding: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
@@ -852,41 +779,16 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-close svg {
-            width: 14px;
-            height: 14px;
-            fill: rgba(255, 255, 255, 0.7);
         }
 
         .modal-content {
             padding: 20px;
-            max-height: 60vh;
+            max-height: 50vh;
             overflow-y: auto;
         }
 
         .modal-content::-webkit-scrollbar {
             display: none;
-        }
-
-        .modal-section {
-            margin-bottom: 20px;
-        }
-
-        .modal-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .modal-section-title {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 12px;
-            margin-bottom: 10px;
         }
 
         .modal-button {
@@ -898,10 +800,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            margin-top: 16px;
         }
 
         .modal-button.primary {
@@ -912,88 +811,6 @@
         .modal-button.secondary {
             background: rgba(255, 255, 255, 0.1);
             color: white;
-        }
-
-        .modal-button:hover {
-            transform: scale(1.02);
-        }
-
-        .modal-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .modal-list-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .modal-list-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-list-item-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(168, 85, 247, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-        }
-
-        .modal-list-item-icon svg {
-            width: 16px;
-            height: 16px;
-            fill: #a855f7;
-        }
-
-        .modal-list-item-text {
-            color: white;
-            font-size: 14px;
-        }
-
-        .modal-list-item-subtext {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-            margin-top: 2px;
-        }
-
-        .modal-description {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
-            line-height: 1.6;
-            text-align: center;
-        }
-
-        .modal-image {
-            width: 100%;
-            height: 120px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-image svg {
-            width: 48px;
-            height: 48px;
-            fill: rgba(255, 255, 255, 0.3);
-        }
-
-        .modal-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 16px 0;
         }
 
         .share-options {
@@ -1040,77 +857,41 @@
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
         }
 
-        .share-option-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
-        }
-
-        .share-option-text {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 12px;
-        }
-
-        .settings-list {
+        .song-list-item {
             display: flex;
-            flex-direction: column;
-        }
-
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .settings-item:last-child {
-            border-bottom: none;
-        }
-
-        .settings-item:hover {
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
         }
 
-        .settings-item-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .settings-item-icon {
-            width: 24px;
-            height: 24px;
+        .song-list-item-cover {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-right: 12px;
         }
 
-        .settings-item-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: rgba(255, 255, 255, 0.7);
+        .song-list-item-info {
+            flex: 1;
         }
 
-        .settings-item-text {
+        .song-list-item-title {
             color: white;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 500;
         }
 
-        .settings-item-arrow {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .settings-item-arrow svg {
-            width: 14px;
-            height: 14px;
-            fill: rgba(255, 255, 255, 0.4);
+        .song-list-item-artist {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            margin-top: 2px;
         }
 
         .gift-category {
@@ -1118,7 +899,6 @@
             gap: 8px;
             margin-bottom: 12px;
             overflow-x: auto;
-            padding-bottom: 8px;
         }
 
         .gift-category::-webkit-scrollbar {
@@ -1131,7 +911,6 @@
             font-size: 12px;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .gift-category-item.active {
@@ -1173,12 +952,6 @@
             justify-content: center;
         }
 
-        .gift-item-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: #fbbf24;
-        }
-
         .gift-item-name {
             color: rgba(255, 255, 255, 0.8);
             font-size: 11px;
@@ -1188,117 +961,6 @@
             color: #fbbf24;
             font-size: 11px;
             font-weight: 600;
-        }
-
-        .song-list-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .song-list-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .song-list-item-cover {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-        }
-
-        .song-list-item-cover svg {
-            width: 20px;
-            height: 20px;
-            fill: rgba(255, 255, 255, 0.8);
-        }
-
-        .song-list-item-info {
-            flex: 1;
-        }
-
-        .song-list-item-title {
-            color: white;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .song-list-item-artist {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-            margin-top: 2px;
-        }
-
-        .song-list-item-status {
-            color: #22c55e;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .volume-slider {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .volume-slider::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%);
-            border-radius: 2px;
-        }
-
-        .volume-slider::before {
-            content: '';
-            position: absolute;
-            left: 60%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .activity-banner {
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .activity-banner:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
-        }
-
-        .activity-banner-text {
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
         }
 
         .community-header {
@@ -1386,752 +1048,946 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
+
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-item-text {
+            color: white;
+            font-size: 14px;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .volume-slider::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%);
+            border-radius: 2px;
+        }
+
+        .volume-slider::before {
+            content: '';
+            position: absolute;
+            left: 60%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
-    <div class="phone-frame">
-        <div class="phone-screen">
-            <div class="content-wrapper">
-                <div class="sakura-bg"></div>
-                <div class="sakura-petals"></div>
+    <div class="phone-container">
+        <div class="sakura-bg"></div>
+        <div class="sakura-petals"></div>
 
-                <div class="status-bar">
-                    <span>21:36</span>
-                    <div class="status-right">
-                        <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 18c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0-4c3.31 0 6-2.69 6-6 0-1.38-.43-2.65-1.16-3.7l-1.42 1.42C16.38 6.22 17 7.06 17 8c0 2.76-2.24 5-5 5s-5-2.24-5-5c0-.94.62-1.78 1.58-2.29L7.16 4.3C6.43 5.35 6 6.62 6 8c0 3.31 2.69 6 6 6zm0-8c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z"/>
+        <div class="scrollable-content">
+            <div class="status-bar">
+                <span>21:36</span>
+                <div class="status-right">
+                    <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 18c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0-4c3.31 0 6-2.69 6-6 0-1.38-.43-2.65-1.16-3.7l-1.42 1.42C16.38 6.22 17 7.06 17 8c0 2.76-2.24 5-5 5s-5-2.24-5-5c0-.94.62-1.78 1.58-2.29L7.16 4.3C6.43 5.35 6 6.62 6 8c0 3.31 2.69 6 6 6zm0-8c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z"/>
+                    </svg>
+                    <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+                    </svg>
+                    <span class="status-text">5G</span>
+                    <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 3c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8zm0 4h6v2h-6V7zm0 4h6v2h-6v-2zm0 4h6v2h-6v-2z"/>
+                    </svg>
+                    <span class="battery">66</span>
+                    <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M11 20h2v-3h3l-4-4-4 4h3z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="room-header">
+                <div class="room-info">
+                    <div class="host-info">
+                        <div class="avatar-wrapper">
+                            <div class="avatar"></div>
+                            <div class="avatar-badge"></div>
+                        </div>
+                        <div class="host-name">
+                            <span>微质</span>
+                            <span>房间ID: 21173223</span>
+                        </div>
+                        <button class="room-btn">一起K歌</button>
+                    </div>
+                    <div class="header-actions">
+                        <div class="action-btn" id="btnFavorite">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="white">
+                                <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                            </svg>
+                        </div>
+                        <div class="action-btn" id="btnShare">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="white">
+                                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.39 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.39 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                            </svg>
+                        </div>
+                        <div class="action-btn" id="btnClose">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="white">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="room-meta">
+                    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg> 47ms</span>
+                    <span>今日点赞数: 5</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="tags-bar">
+                <div class="tags-row">
+                    <span class="tag"># dd</span>
+                    <span class="tag mic">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                         </svg>
-                        <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+                        我的段位
+                    </span>
+                    <div class="mic-avatars-row">
+                        <div class="mic-avatar-small" style="background: url('https://neeko-copilot.bytedance.net/api/text_to_image?prompt=avatar%20male%20portrait&image_size=square') center/cover"></div>
+                        <div class="mic-avatar-small" style="background: url('https://neeko-copilot.bytedance.net/api/text_to_image?prompt=avatar%20landscape&image_size=square') center/cover"></div>
+                    </div>
+                    <span class="online-count">1人麦下</span>
+                </div>
+                <div class="tags-row">
+                    <span class="tag">质量独唱</span>
+                    <div class="factory-info" id="btnCommunity">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
                         </svg>
-                        <span class="status-text">5G</span>
-                        <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 3c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8zm0 4h6v2h-6V7zm0 4h6v2h-6v-2zm0 4h6v2h-6v-2z"/>
-                        </svg>
-                        <span class="battery">66</span>
-                        <svg class="status-icon" width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M11 20h2v-3h3l-4-4-4 4h3z"/>
+                        <span>暗恋Sec</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                         </svg>
                     </div>
                 </div>
+            </div>
 
-                <div class="room-header">
-                    <div class="room-info">
-                        <div class="host-info-wrapper">
-                            <div class="host-info">
-                                <div class="avatar"></div>
-                                <div class="host-name">
-                                    <span>微质</span>
-                                    <span>房间ID: 21173223</span>
-                                </div>
-                            </div>
-                            <button class="room-btn">一起K歌</button>
-                        </div>
-                        <div class="header-actions">
-                            <div class="action-btn" id="btnFavorite">
-                                <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg>
-                            </div>
-                            <div class="action-btn" id="btnShare">
-                                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.39 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.39 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-                            </div>
-                            <div class="action-btn" id="btnClose">
-                                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                            </div>
-                        </div>
+            <div class="karaoke-area">
+                <div class="karaoke-header">
+                    <svg class="decoration-star" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14L2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    北京第十三薛之谦
+                    <svg class="decoration-star" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14L2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div class="karaoke-video">
+                    <div class="current-score">
+                        <span>当前得分</span>
+                        <span>1826</span>
                     </div>
-                    <div class="room-meta">
-                        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> 47ms</span>
-                        <span>今日点赞数: 5</span>
+                    <div class="singer-avatar"></div>
+                </div>
+                <div class="lyrics-area">
+                    <div class="lyric-line active">失去你我才知道要珍惜</div>
+                    <div class="lyric-line inactive">当时无法</div>
+                    <div class="lyric-line inactive">为你写的那首歌</div>
+                </div>
+                <div class="karaoke-controls">
+                    <div class="sing-along" id="btnSingAlong">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="#fbbf24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <span>默默跟唱</span>
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </div>
+                    <div class="original-switch" id="btnOriginal">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="rgba(255,255,255,0.6)">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                        <span>原唱:关</span>
+                    </div>
+                    <div class="song-info">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.6)">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <span class="song-title">Melody (伴奏)</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="tags-bar">
-                    <div class="tags-row">
-                        <div style="display: flex; gap: 8px;">
-                            <span class="tag"># dd</span>
-                            <span class="tag mic">我的段位</span>
-                        </div>
-                        <span class="online-count">1人麦下</span>
+            <div class="song-request-area">
+                <div class="request-info">
+                    <span>
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="#f97316">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        已点(2)
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="rgba(255,255,255,0.6)">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </span>
+                    <span>下一首:没那么简单 (DJ阿lo版)</span>
+                </div>
+                <div class="activity-badge">
+                    <div class="activity-icon">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14L2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
                     </div>
-                    <div class="tags-row">
-                        <span class="tag">质量独唱</span>
-                        <div class="factory-info" id="btnCommunity">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                            <span>暗恋Sec</span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                        </div>
+                    <div>
+                        <div class="activity-text">沙滩恋歌杯</div>
+                        <div class="activity-count">33.8万人参与</div>
                     </div>
                 </div>
+                <button class="request-btn" id="btnRequest">点歌</button>
+            </div>
 
-                <div class="karaoke-area">
-                    <div class="karaoke-header">
-                        <div class="header-decorations">
-                            <svg class="decoration-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                            <svg class="decoration-star left" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                            <svg class="decoration-star right" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        </div>
-                        北京第十三薛之谦
-                    </div>
-                    <div class="karaoke-video">
-                        <div class="current-score">
-                            <span>当前得分</span>
-                            <span>1826</span>
-                        </div>
-                    </div>
-                    <div class="lyrics-area">
-                        <div class="lyric-line active">失去你我才知道要珍惜</div>
-                        <div class="lyric-line inactive">当时无法</div>
-                        <div class="lyric-line inactive">为你写的那首歌</div>
-                    </div>
-                    <div class="karaoke-controls">
-                        <div class="sing-along" id="btnSingAlong">
-                            <span>默默跟唱</span>
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        <div class="original-switch" id="btnOriginal">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-                            <span>原唱:关</span>
-                        </div>
-                        <div class="song-info">
-                            <span class="song-title">Melody (伴奏)</span>
-                        </div>
+            <div class="mic-positions">
+                <div class="mic-position">
+                    <div class="mic-position-avatar singing">
+                        <div class="rank-badge"></div>
                     </div>
                 </div>
-
-                <div class="song-request-area">
-                    <div class="request-info">
-                        <span>
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            已点(2)
-                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                        </span>
-                        <span>下一首:没那么简单 (DJ阿lo版)</span>
-                    </div>
-                    <button class="request-btn" id="btnRequest">点歌</button>
-                </div>
-
-                <div class="mic-positions">
-                    <div class="mic-position" id="mic1">
-                        <div class="mic-avatar singing"></div>
-                    </div>
-                    <div class="mic-position" id="mic2">
-                        <div class="mic-wrapper"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
-                    </div>
-                    <div class="mic-position" id="mic3">
-                        <div class="mic-wrapper"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
-                    </div>
-                    <div class="mic-position" id="mic4">
-                        <div class="mic-wrapper"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
-                    </div>
-                    <div class="mic-position" id="mic5">
-                        <div class="mic-avatar ready"></div>
-                    </div>
-                    <div class="mic-position" id="mic6">
-                        <div class="mic-wrapper"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
-                    </div>
-                    <div class="mic-position" id="mic7">
-                        <div class="mic-wrapper"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
-                    </div>
-                    <div class="mic-position" id="mic8">
-                        <div class="mic-avatar"></div>
+                <div class="mic-position">
+                    <div class="mic-wrapper">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="rgba(255,255,255,0.5)">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
                     </div>
                 </div>
+                <div class="mic-position">
+                    <div class="mic-wrapper">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="rgba(255,255,255,0.5)">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mic-position">
+                    <div class="mic-wrapper">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="rgba(255,255,255,0.5)">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mic-position">
+                    <div class="mic-position-avatar ready"></div>
+                </div>
+                <div class="mic-position">
+                    <div class="mic-wrapper">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="rgba(255,255,255,0.5)">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mic-position">
+                    <div class="mic-wrapper">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="rgba(255,255,255,0.5)">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mic-position">
+                    <div class="mic-position-avatar"></div>
+                </div>
+            </div>
 
-                <div class="chat-area">
-                    <div class="enter-message">我 进入房间</div>
-                    <div class="chat-message">
-                        <div class="message-content">
-                            <div class="message-header">
-                                <span class="role-badge">房主</span>
-                                <span class="sender-name">是洛诗丫:</span>
-                            </div>
-                            <div class="message-text">欢迎@@CHANGE OF HEART，一起聊聊吧~</div>
-                            <div class="message-actions">
-                                <span class="message-action">+1</span>
-                            </div>
+            <div class="chat-area">
+                <div class="enter-message">我 进入房间</div>
+                <div class="chat-message">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="role-badge">房主</span>
+                            <span class="sender-name">是洛诗丫:</span>
                         </div>
-                    </div>
-                    <div class="chat-message">
-                        <div class="message-content">
-                            <div class="message-header">
-                                <span class="role-badge">房主</span>
-                                <span class="sender-name">是洛诗丫:</span>
-                            </div>
-                            <div class="message-text">欢迎@@尼尔巴斯哥哥，一起聊聊吧~</div>
-                            <div class="message-actions">
-                                <span class="message-action primary">打招呼</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-message">
-                        <div class="message-content">
-                            <div class="message-header">
-                                <span class="role-badge">房主</span>
-                                <span class="sender-name">是洛诗丫:</span>
-                            </div>
-                            <div class="message-text">@尼尔巴斯哥哥 来成为暗恋Secret love厂牌的一员吧</div>
-                            <div class="message-actions">
-                                <span class="message-action primary">加入厂牌</span>
-                            </div>
+                        <div class="message-text">欢迎@@CHANGE OF HEART，一起聊聊吧~</div>
+                        <div class="message-actions">
+                            <span class="message-action">+1</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="bottom-bar">
-                    <div class="input-area" id="btnInput">
-                        <input type="text" placeholder="说点什么...">
+                <div class="chat-message">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="role-badge">房主</span>
+                            <span class="sender-name">是洛诗丫:</span>
+                        </div>
+                        <div class="message-text">欢迎@@尼尔巴斯哥哥，一起聊聊吧~</div>
+                        <div class="message-actions">
+                            <span class="message-action primary">打招呼</span>
+                        </div>
                     </div>
-                    <div class="bottom-action gift" id="btnGift">
-                        <svg viewBox="0 0 24 24"><path d="M20,12H22V10H20V12M18,10H16V6H14V10H10V6H8V10H6V12H8V21H16V12H18V10M9,12H7V14H9V12M15,14V12H17V14H15M9,16V18H7V16H9M15,18V16H17V18H15M12,8L10.5,6.5L12,5L13.5,6.5L12,8M12,3.5L9,5H7.5C6.12,5 5,6.12 5,7.5C5,8.88 6.12,10 7.5,10H9V9H7.5C6.67,9 6,8.33 6,7.5C6,6.67 6.67,6 7.5,6H9L12,3.5M12,3.5L15,5H16.5C17.88,5 19,6.12 19,7.5C19,8.88 17.88,10 16.5,10H15V9H16.5C17.33,9 18,8.33 18,7.5C18,6.67 17.33,6 16.5,6H15L12,3.5Z"/></svg>
-                    </div>
-                    <div class="bottom-action normal" id="btnVolume">
-                        <svg viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"/></svg>
-                    </div>
-                    <div class="bottom-action normal" id="btnMessages">
-                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9 2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    </div>
-                    <div class="bottom-action normal" id="btnSettings">
-                        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                </div>
+                <div class="chat-message">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="role-badge">房主</span>
+                            <span class="sender-name">是洛诗丫:</span>
+                        </div>
+                        <div class="message-text">@尼尔巴斯哥哥 来成为暗恋Secret love厂牌的一员吧</div>
+                        <div class="message-actions">
+                            <span class="message-action primary">加入厂牌</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalFavorite">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">收藏房间</span>
-                <div class="modal-close" onclick="closeModal('modalFavorite')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
+        <div class="bottom-bar">
+            <div class="input-area" id="btnInput">
+                <input type="text" placeholder="说点什么...">
             </div>
-            <div class="modal-content">
-                <div class="modal-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <div class="bottom-action gift" id="btnGift">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
+                    <path d="M20,12H22V10H20V12M18,10H16V6H14V10H10V6H8V10H6V12H8V21H16V12H18V10M9,12H7V14H9V12M15,14V12H17V14H15M9,16V18H7V16H9M15,18V16H17V18H15M12,8L10.5,6.5L12,5L13.5,6.5L12,8M12,3.5L9,5H7.5C6.12,5 5,6.12 5,7.5C5,8.88 6.12,10 7.5,10H9V9H7.5C6.67,9 6,8.33 6,7.5C6,6.67 6.67,6 7.5,6H9L12,3.5M12,3.5L15,5H16.5C17.88,5 19,6.12 19,7.5C19,8.88 17.88,10 16.5,10H15V9H16.5C17.33,9 18,8.33 18,7.5C18,6.67 17.33,6 16.5,6H15L12,3.5Z"/>
+                </svg>
+            </div>
+            <div class="bottom-action normal" id="btnVolume">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
+                    <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"/>
+                </svg>
+            </div>
+            <div class="bottom-action normal" id="btnMessages">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9 2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+            </div>
+            <div class="bottom-action normal" id="btnSettings">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="call-button" id="btnCall">
+            <svg viewBox="0 0 24 24">
+                <path d="M9.37 17.51c1.53-.9 2.51-2.55 2.51-4.51 0-3.31-2.69-6-6-6S0 9.69 0 13s2.69 6 6 6c1.96 0 3.61-1 4.37-2.49zm-1.37-3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3-3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm3-3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 14H5V6h14v12z"/>
+            </svg>
+        </div>
+
+        <div class="modal-overlay" id="modalFavorite">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">收藏房间</span>
+                    <div class="modal-close" onclick="closeModal('modalFavorite')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
                 </div>
-                <div class="modal-description">
-                    收藏此房间后，下次进入K歌专栏将优先推荐该房间。
-                </div>
-                <div style="margin-top: 20px;">
+                <div class="modal-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="#fbbf24" style="margin-bottom: 16px;">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">收藏此房间后，下次进入K歌专栏将优先推荐该房间。</p>
+                    </div>
                     <button class="modal-button primary" onclick="closeModal('modalFavorite')">确认收藏</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalShare">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">分享房间</span>
-                <div class="modal-close" onclick="closeModal('modalShare')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="share-options">
-                    <div class="share-option">
-                        <div class="share-option-icon wechat">
-                            <svg viewBox="0 0 24 24"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.801 0 8.692-3.29 8.692-7.343 0-4.055-3.891-7.342-8.692-7.342z"/></svg>
-                        </div>
-                        <span class="share-option-text">微信</span>
-                    </div>
-                    <div class="share-option">
-                        <div class="share-option-icon qq">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                        </div>
-                        <span class="share-option-text">QQ</span>
-                    </div>
-                    <div class="share-option">
-                        <div class="share-option-icon tt">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                        </div>
-                        <span class="share-option-text">TT好友</span>
+        <div class="modal-overlay" id="modalShare">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">分享房间</span>
+                    <div class="modal-close" onclick="closeModal('modalShare')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
                     </div>
                 </div>
-                <div class="modal-divider"></div>
-                <div class="modal-list">
-                    <div class="modal-list-item">
-                        <div class="modal-list-item-icon">
-                            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H6V4h12v16z"/></svg>
+                <div class="modal-content">
+                    <div class="share-options">
+                        <div class="share-option">
+                            <div class="share-option-icon wechat">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+                                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c4.801 0 8.692-3.29 8.692-7.343 0-4.055-3.891-7.342-8.692-7.342z"/>
+                                </svg>
+                            </div>
+                            <span class="share-option-text">微信</span>
                         </div>
+                        <div class="share-option">
+                            <div class="share-option-icon qq">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                                </svg>
+                            </div>
+                            <span class="share-option-text">QQ</span>
+                        </div>
+                        <div class="share-option">
+                            <div class="share-option-icon tt">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                                </svg>
+                            </div>
+                            <span class="share-option-text">TT好友</span>
+                        </div>
+                    </div>
+                    <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 16px 0;"></div>
+                    <div style="display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer;">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="#a855f7" style="margin-right: 12px;">
+                            <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H6V4h12v16z"/>
+                        </svg>
                         <div>
-                            <div class="modal-list-item-text">复制链接</div>
-                            <div class="modal-list-item-subtext">房间链接已复制到剪贴板</div>
+                            <div style="color: white; font-size: 14px;">复制链接</div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 11px;">房间链接已复制到剪贴板</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalClose">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">退出房间</span>
-                <div class="modal-close" onclick="closeModal('modalClose')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-image">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-                <div class="modal-description">
-                    确定要退出当前房间吗？退出后将离开K歌房。
-                </div>
-                <div style="margin-top: 20px; display: flex; gap: 12px;">
-                    <button class="modal-button secondary" onclick="closeModal('modalClose')">取消</button>
-                    <button class="modal-button primary">确认退出</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalCommunity">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">暗恋Secret love</span>
-                <div class="modal-close" onclick="closeModal('modalCommunity')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="community-header">
-                    <div class="community-avatar"></div>
-                    <div class="community-info">
-                        <div class="community-name">暗恋Secret love</div>
-                        <div class="community-members">1.2万成员</div>
+        <div class="modal-overlay" id="modalClose">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">退出房间</span>
+                    <div class="modal-close" onclick="closeModal('modalClose')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
                     </div>
                 </div>
-                <div class="community-stats">
-                    <div class="community-stat-item">
-                        <div class="community-stat-value">88</div>
-                        <div class="community-stat-label">话题</div>
+                <div class="modal-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="#ef4444" style="margin-bottom: 16px;">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">确定要退出当前房间吗？退出后将离开K歌房。</p>
                     </div>
-                    <div class="community-stat-item">
-                        <div class="community-stat-value">128</div>
-                        <div class="community-stat-label">讨论</div>
-                    </div>
-                    <div class="community-stat-item">
-                        <div class="community-stat-value">5</div>
-                        <div class="community-stat-label">开播中</div>
-                    </div>
-                </div>
-                <div class="notice-content">
-                    <div class="notice-title">社团公告</div>
-                    <div class="notice-text">欢迎加入暗恋Secret love社团！每周五晚8点举办K歌比赛，欢迎踊跃参与。</div>
-                </div>
-                <div class="modal-section">
-                    <div class="modal-section-title">社团成员</div>
-                    <div class="member-list">
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                        <div class="member-item"></div>
-                    </div>
-                </div>
-                <button class="modal-button primary">加入社团</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalRequest">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">点歌台</span>
-                <div class="modal-close" onclick="closeModal('modalRequest')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-section">
-                    <div class="modal-section-title">已点歌曲 (2)</div>
-                    <div class="song-list-item">
-                        <div class="song-list-item-cover">
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        <div class="song-list-item-info">
-                            <div class="song-list-item-title">Melody (伴奏)</div>
-                            <div class="song-list-item-artist">陶喆</div>
-                        </div>
-                        <div class="song-list-item-status">演唱中</div>
-                    </div>
-                    <div class="song-list-item">
-                        <div class="song-list-item-cover">
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        <div class="song-list-item-info">
-                            <div class="song-list-item-title">没那么简单 (DJ阿lo版)</div>
-                            <div class="song-list-item-artist">黄小琥</div>
-                        </div>
-                        <div class="song-list-item-status">下一首</div>
-                    </div>
-                </div>
-                <div class="modal-divider"></div>
-                <div class="modal-section">
-                    <div class="modal-section-title">热门歌曲</div>
-                    <div class="song-list-item">
-                        <div class="song-list-item-cover">
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        <div class="song-list-item-info">
-                            <div class="song-list-item-title">告白气球</div>
-                            <div class="song-list-item-artist">周杰伦</div>
-                        </div>
-                    </div>
-                    <div class="song-list-item">
-                        <div class="song-list-item-cover">
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        <div class="song-list-item-info">
-                            <div class="song-list-item-title">后来</div>
-                            <div class="song-list-item-artist">刘若英</div>
-                        </div>
-                    </div>
-                    <div class="song-list-item">
-                        <div class="song-list-item-cover">
-                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        <div class="song-list-item-info">
-                            <div class="song-list-item-title">夜曲</div>
-                            <div class="song-list-item-artist">周杰伦</div>
-                        </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="modal-button secondary" onclick="closeModal('modalClose')" style="margin-top: 0;">取消</button>
+                        <button class="modal-button primary" style="margin-top: 0;">确认退出</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalGift">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">礼物</span>
-                <div class="modal-close" onclick="closeModal('modalGift')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="gift-category">
-                    <span class="gift-category-item active">热门</span>
-                    <span class="gift-category-item inactive">表白</span>
-                    <span class="gift-category-item inactive">道具</span>
-                    <span class="gift-category-item inactive">守护</span>
-                </div>
-                <div class="gift-grid">
-                    <div class="gift-item">
-                        <div class="gift-item-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        </div>
-                        <div class="gift-item-name">爱心</div>
-                        <div class="gift-item-price">10 T豆</div>
-                    </div>
-                    <div class="gift-item">
-                        <div class="gift-item-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        </div>
-                        <div class="gift-item-name">星星</div>
-                        <div class="gift-item-price">20 T豆</div>
-                    </div>
-                    <div class="gift-item">
-                        <div class="gift-item-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                        </div>
-                        <div class="gift-item-name">钻石</div>
-                        <div class="gift-item-price">50 T豆</div>
-                    </div>
-                    <div class="gift-item">
-                        <div class="gift-item-icon">
-                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                        </div>
-                        <div class="gift-item-name">皇冠</div>
-                        <div class="gift-item-price">100 T豆</div>
+        <div class="modal-overlay" id="modalCommunity">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">暗恋Secret love</span>
+                    <div class="modal-close" onclick="closeModal('modalCommunity')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
                     </div>
                 </div>
-                <div style="margin-top: 20px; text-align: center; color: #fbbf24; font-size: 14px;">
-                    当前余额: 288 T豆
+                <div class="modal-content">
+                    <div class="community-header">
+                        <div class="community-avatar"></div>
+                        <div class="community-info">
+                            <div class="community-name">暗恋Secret love</div>
+                            <div class="community-members">1.2万成员</div>
+                        </div>
+                    </div>
+                    <div class="community-stats">
+                        <div class="community-stat-item">
+                            <div class="community-stat-value">88</div>
+                            <div class="community-stat-label">话题</div>
+                        </div>
+                        <div class="community-stat-item">
+                            <div class="community-stat-value">128</div>
+                            <div class="community-stat-label">讨论</div>
+                        </div>
+                        <div class="community-stat-item">
+                            <div class="community-stat-value">5</div>
+                            <div class="community-stat-label">开播中</div>
+                        </div>
+                    </div>
+                    <div class="notice-content">
+                        <div class="notice-title">社团公告</div>
+                        <div class="notice-text">欢迎加入暗恋Secret love社团！每周五晚8点举办K歌比赛，欢迎踊跃参与。</div>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 10px;">社团成员</div>
+                        <div class="member-list">
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                            <div class="member-item"></div>
+                        </div>
+                    </div>
+                    <button class="modal-button primary">加入社团</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalSettings">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">房间设置</span>
-                <div class="modal-close" onclick="closeModal('modalSettings')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <div class="modal-overlay" id="modalRequest">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">点歌台</span>
+                    <div class="modal-close" onclick="closeModal('modalRequest')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-section">
-                    <div class="modal-section-title">音量调节</div>
-                    <div class="volume-slider"></div>
-                </div>
-                <div class="settings-list">
-                    <div class="settings-item">
-                        <div class="settings-item-left">
-                            <div class="settings-item-icon">
-                                <svg viewBox="0 0 24 24"><path d="M19 11H7v2h12v-2zm4-4H3v2h20V7zm-4 10H7v2h12v-2z"/></svg>
+                <div class="modal-content">
+                    <div style="margin-bottom: 16px;">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 10px;">已点歌曲 (2)</div>
+                        <div class="song-list-item">
+                            <div class="song-list-item-cover">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.8)">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
                             </div>
-                            <span class="settings-item-text">K歌模式</span>
-                        </div>
-                        <div class="settings-item-arrow">
-                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                        </div>
-                    </div>
-                    <div class="settings-item">
-                        <div class="settings-item-left">
-                            <div class="settings-item-icon">
-                                <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 2.99-1.34 2.99-3S13.66 9 12 9 9 10.34 9 12s1.34 3 3 3zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm0 10c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-4-3.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5S7 12.83 7 12zm10 0c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5zM12 4.5c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"/></svg>
+                            <div class="song-list-item-info">
+                                <div class="song-list-item-title">Melody (伴奏)</div>
+                                <div class="song-list-item-artist">陶喆</div>
                             </div>
-                            <span class="settings-item-text">语音降噪</span>
+                            <div style="color: #22c55e; font-size: 11px; font-weight: 600;">演唱中</div>
                         </div>
-                        <div class="settings-item-arrow">
-                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                        </div>
-                    </div>
-                    <div class="settings-item">
-                        <div class="settings-item-left">
-                            <div class="settings-item-icon">
-                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <div class="song-list-item">
+                            <div class="song-list-item-cover">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.8)">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
                             </div>
-                            <span class="settings-item-text">意见反馈</span>
-                        </div>
-                        <div class="settings-item-arrow">
-                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                        </div>
-                    </div>
-                    <div class="settings-item">
-                        <div class="settings-item-left">
-                            <div class="settings-item-icon">
-                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            <div class="song-list-item-info">
+                                <div class="song-list-item-title">没那么简单 (DJ阿lo版)</div>
+                                <div class="song-list-item-artist">黄小琥</div>
                             </div>
-                            <span class="settings-item-text">举报</span>
-                        </div>
-                        <div class="settings-item-arrow">
-                            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                            <div style="color: #fbbf24; font-size: 11px; font-weight: 600;">下一首</div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalMessages">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">实时消息</span>
-                <div class="modal-close" onclick="closeModal('modalMessages')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="chat-area" style="padding: 0; margin: 0;">
-                    <div class="chat-message">
-                        <div class="message-content">
-                            <div class="message-header">
-                                <span class="sender-name">好友A:</span>
+                    <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 16px 0;"></div>
+                    <div>
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 10px;">热门歌曲</div>
+                        <div class="song-list-item">
+                            <div class="song-list-item-cover">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.8)">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
                             </div>
-                            <div class="message-text">在吗？一起玩游戏</div>
-                        </div>
-                    </div>
-                    <div class="chat-message">
-                        <div class="message-content">
-                            <div class="message-header">
-                                <span class="sender-name">系统通知:</span>
+                            <div class="song-list-item-info">
+                                <div class="song-list-item-title">告白气球</div>
+                                <div class="song-list-item-artist">周杰伦</div>
                             </div>
-                            <div class="message-text">您的礼物已送达</div>
+                        </div>
+                        <div class="song-list-item">
+                            <div class="song-list-item-cover">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.8)">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <div class="song-list-item-info">
+                                <div class="song-list-item-title">后来</div>
+                                <div class="song-list-item-artist">刘若英</div>
+                            </div>
+                        </div>
+                        <div class="song-list-item">
+                            <div class="song-list-item-cover">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.8)">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <div class="song-list-item-info">
+                                <div class="song-list-item-title">夜曲</div>
+                                <div class="song-list-item-artist">周杰伦</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-divider"></div>
-                <div class="input-area">
-                    <input type="text" placeholder="回复消息...">
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modalGift">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">礼物</span>
+                    <div class="modal-close" onclick="closeModal('modalGift')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div class="gift-category">
+                        <span class="gift-category-item active">热门</span>
+                        <span class="gift-category-item inactive">表白</span>
+                        <span class="gift-category-item inactive">道具</span>
+                        <span class="gift-category-item inactive">守护</span>
+                    </div>
+                    <div class="gift-grid">
+                        <div class="gift-item">
+                            <div class="gift-item-icon">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#fbbf24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </div>
+                            <div class="gift-item-name">爱心</div>
+                            <div class="gift-item-price">10 T豆</div>
+                        </div>
+                        <div class="gift-item">
+                            <div class="gift-item-icon">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#fbbf24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14L2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <div class="gift-item-name">星星</div>
+                            <div class="gift-item-price">20 T豆</div>
+                        </div>
+                        <div class="gift-item">
+                            <div class="gift-item-icon">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#fbbf24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <div class="gift-item-name">钻石</div>
+                            <div class="gift-item-price">50 T豆</div>
+                        </div>
+                        <div class="gift-item">
+                            <div class="gift-item-icon">
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="#fbbf24">
+                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                </svg>
+                            </div>
+                            <div class="gift-item-name">皇冠</div>
+                            <div class="gift-item-price">100 T豆</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; text-align: center; color: #fbbf24; font-size: 14px;">
+                        当前余额: 288 T豆
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalVolume">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">音量设置</span>
-                <div class="modal-close" onclick="closeModal('modalVolume')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <div class="modal-overlay" id="modalSettings">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">房间设置</span>
+                    <div class="modal-close" onclick="closeModal('modalSettings')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-section">
-                    <div class="modal-section-title">房间音量</div>
-                    <div class="volume-slider"></div>
-                </div>
-                <button class="modal-button secondary" style="margin-top: 10px;">静音</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalInput">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">发送弹幕</span>
-                <div class="modal-close" onclick="closeModal('modalInput')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="input-area" style="margin-bottom: 16px;">
-                    <input type="text" placeholder="说点什么...">
-                </div>
-                <button class="modal-button primary">发送</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalSingAlong">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">默默跟唱</span>
-                <div class="modal-close" onclick="closeModal('modalSingAlong')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-image">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <div class="modal-description">
-                    开启默默跟唱后，您可以在不上麦的情况下参与合唱，但其他用户听不到您的声音。
-                </div>
-                <div style="margin-top: 20px; display: flex; gap: 12px;">
-                    <button class="modal-button secondary" onclick="closeModal('modalSingAlong')">取消</button>
-                    <button class="modal-button primary">开启跟唱</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalOriginal">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">原唱开关</span>
-                <div class="modal-close" onclick="closeModal('modalOriginal')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-description">
-                    当前状态：原唱已关闭
-                </div>
-                <div style="margin-top: 20px; display: flex; gap: 12px;">
-                    <button class="modal-button secondary" onclick="closeModal('modalOriginal')">取消</button>
-                    <button class="modal-button primary">开启原唱</button>
+                <div class="modal-content">
+                    <div style="margin-bottom: 16px;">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 10px;">音量调节</div>
+                        <div class="volume-slider"></div>
+                    </div>
+                    <div class="settings-list">
+                        <div class="settings-item">
+                            <div class="settings-item-left">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+                                    <path d="M19 11H7v2h12v-2zm4-4H3v2h20V7zm-4 10H7v2h12v-2z"/>
+                                </svg>
+                                <span class="settings-item-text">K歌模式</span>
+                            </div>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.4)">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-item-left">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+                                    <path d="M12 15c1.66 0 2.99-1.34 2.99-3S13.66 9 12 9 9 10.34 9 12s1.34 3 3 3zm-1-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm0 10c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-4-3.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5S7 12.83 7 12zm10 0c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5zM12 4.5c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"/>
+                                </svg>
+                                <span class="settings-item-text">语音降噪</span>
+                            </div>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.4)">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-item-left">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                </svg>
+                                <span class="settings-item-text">意见反馈</span>
+                            </div>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.4)">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-item-left">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                                <span class="settings-item-text">举报</span>
+                            </div>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.4)">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalMic">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">上麦唱歌</span>
-                <div class="modal-close" onclick="closeModal('modalMic')">
-                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <div class="modal-overlay" id="modalMessages">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">实时消息</span>
+                    <div class="modal-close" onclick="closeModal('modalMessages')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-content">
-                <div class="modal-image">
-                    <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-                </div>
-                <div class="modal-description">
-                    点击确认上麦，您将进入麦序等待唱歌。
-                </div>
-                <div style="margin-top: 20px; display: flex; gap: 12px;">
-                    <button class="modal-button secondary" onclick="closeModal('modalMic')">取消</button>
-                    <button class="modal-button primary">确认上麦</button>
+                <div class="modal-content">
+                    <div style="margin-bottom: 16px;">
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 0 12px 12px 12px; padding: 9px 12px; margin-bottom: 10px;">
+                            <div style="color: #fbbf24; font-size: 12px; font-weight: 600; margin-bottom: 3px;">好友A:</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 12px;">在吗？一起玩游戏</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 0 12px 12px 12px; padding: 9px 12px;">
+                            <div style="color: #fbbf24; font-size: 12px; font-weight: 600; margin-bottom: 3px;">系统通知:</div>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 12px;">您的礼物已送达</div>
+                        </div>
+                    </div>
+                    <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 16px 0;"></div>
+                    <div class="input-area">
+                        <input type="text" placeholder="回复消息...">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
+        <div class="modal-overlay" id="modalVolume">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">音量设置</span>
+                    <div class="modal-close" onclick="closeModal('modalVolume')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div style="margin-bottom: 16px;">
+                        <div style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 10px;">房间音量</div>
+                        <div class="volume-slider"></div>
+                    </div>
+                    <button class="modal-button secondary" style="margin-top: 0;">静音</button>
+                </div>
+            </div>
+        </div>
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
+        <div class="modal-overlay" id="modalInput">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">发送弹幕</span>
+                    <div class="modal-close" onclick="closeModal('modalInput')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div class="input-area" style="margin-bottom: 16px;">
+                        <input type="text" placeholder="说点什么...">
+                    </div>
+                    <button class="modal-button primary" style="margin-top: 0;">发送</button>
+                </div>
+            </div>
+        </div>
 
-        document.getElementById('btnFavorite').addEventListener('click', function() {
-            openModal('modalFavorite');
-        });
+        <div class="modal-overlay" id="modalSingAlong">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">默默跟唱</span>
+                    <div class="modal-close" onclick="closeModal('modalSingAlong')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="#a855f7" style="margin-bottom: 16px;">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">开启默默跟唱后，您可以在不上麦的情况下参与合唱，但其他用户听不到您的声音。</p>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="modal-button secondary" onclick="closeModal('modalSingAlong')" style="margin-top: 0;">取消</button>
+                        <button class="modal-button primary" style="margin-top: 0;">开启跟唱</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        document.getElementById('btnShare').addEventListener('click', function() {
-            openModal('modalShare');
-        });
+        <div class="modal-overlay" id="modalOriginal">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">原唱开关</span>
+                    <div class="modal-close" onclick="closeModal('modalOriginal')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">当前状态：原唱已关闭</p>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="modal-button secondary" onclick="closeModal('modalOriginal')" style="margin-top: 0;">取消</button>
+                        <button class="modal-button primary" style="margin-top: 0;">开启原唱</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        document.getElementById('btnClose').addEventListener('click', function() {
-            openModal('modalClose');
-        });
+        <div class="modal-overlay" id="modalMic">
+            <div class="modal">
+                <div class="modal-header">
+                    <span class="modal-title">上麦唱歌</span>
+                    <div class="modal-close" onclick="closeModal('modalMic')">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,0.7)">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="#f97316" style="margin-bottom: 16px;">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">点击确认上麦，您将进入麦序等待唱歌。</p>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="modal-button secondary" onclick="closeModal('modalMic')" style="margin-top: 0;">取消</button>
+                        <button class="modal-button primary" style="margin-top: 0;">确认上麦</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        document.getElementById('btnCommunity').addEventListener('click', function() {
-            openModal('modalCommunity');
-        });
+        <script>
+            function openModal(modalId) {
+                document.getElementById(modalId).classList.add('active');
+            }
 
-        document.getElementById('btnSingAlong').addEventListener('click', function() {
-            openModal('modalSingAlong');
-        });
+            function closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            }
 
-        document.getElementById('btnOriginal').addEventListener('click', function() {
-            openModal('modalOriginal');
-        });
-
-        document.getElementById('btnRequest').addEventListener('click', function() {
-            openModal('modalRequest');
-        });
-
-        document.getElementById('btnGift').addEventListener('click', function() {
-            openModal('modalGift');
-        });
-
-        document.getElementById('btnSettings').addEventListener('click', function() {
-            openModal('modalSettings');
-        });
-
-        document.getElementById('btnMessages').addEventListener('click', function() {
-            openModal('modalMessages');
-        });
-
-        document.getElementById('btnVolume').addEventListener('click', function() {
-            openModal('modalVolume');
-        });
-
-        document.getElementById('btnInput').addEventListener('click', function() {
-            openModal('modalInput');
-        });
-
-        var micPositions = document.querySelectorAll('.mic-position');
-        micPositions.forEach(function(mic) {
-            mic.addEventListener('click', function() {
-                var micWrapper = mic.querySelector('.mic-wrapper');
-                if (micWrapper && !micWrapper.classList.contains('singing')) {
-                    openModal('modalMic');
-                }
+            document.getElementById('btnFavorite').addEventListener('click', function() {
+                openModal('modalFavorite');
             });
-        });
 
-        document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) {
-                    overlay.classList.remove('active');
-                }
+            document.getElementById('btnShare').addEventListener('click', function() {
+                openModal('modalShare');
             });
-        });
-    </script>
+
+            document.getElementById('btnClose').addEventListener('click', function() {
+                openModal('modalClose');
+            });
+
+            document.getElementById('btnCommunity').addEventListener('click', function() {
+                openModal('modalCommunity');
+            });
+
+            document.getElementById('btnSingAlong').addEventListener('click', function() {
+                openModal('modalSingAlong');
+            });
+
+            document.getElementById('btnOriginal').addEventListener('click', function() {
+                openModal('modalOriginal');
+            });
+
+            document.getElementById('btnRequest').addEventListener('click', function() {
+                openModal('modalRequest');
+            });
+
+            document.getElementById('btnGift').addEventListener('click', function() {
+                openModal('modalGift');
+            });
+
+            document.getElementById('btnSettings').addEventListener('click', function() {
+                openModal('modalSettings');
+            });
+
+            document.getElementById('btnMessages').addEventListener('click', function() {
+                openModal('modalMessages');
+            });
+
+            document.getElementById('btnVolume').addEventListener('click', function() {
+                openModal('modalVolume');
+            });
+
+            document.getElementById('btnInput').addEventListener('click', function() {
+                openModal('modalInput');
+            });
+
+            document.getElementById('btnCall').addEventListener('click', function() {
+                let likeCount = document.querySelector('.room-meta span:last-child');
+                let currentCount = parseInt(likeCount.textContent.replace('今日点赞数: ', ''));
+                likeCount.textContent = '今日点赞数: ' + (currentCount + 1);
+            });
+
+            var micPositions = document.querySelectorAll('.mic-position');
+            micPositions.forEach(function(mic) {
+                mic.addEventListener('click', function() {
+                    var micWrapper = mic.querySelector('.mic-wrapper');
+                    if (micWrapper) {
+                        openModal('modalMic');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        </script>
+    </div>
 </body>
 </html>
