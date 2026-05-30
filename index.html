@@ -309,7 +309,7 @@
             <div class="main-screen" id="mainScreen">
                 <!-- 顶部按钮 -->
                 <div class="clickable-area room-info-btn" data-page="room-info"></div>
-                <div class="clickable-area star-btn" data-page="collect"></div>
+                <div class="clickable-area star-btn" data-action="collect"></div>
                 <div class="clickable-area share-btn" data-page="share"></div>
                 <div class="clickable-area power-btn" data-action="exit"></div>
                 
@@ -654,6 +654,10 @@
 
         function handleAction(action) {
             switch(action) {
+                case 'collect':
+                    const mainScreen = document.getElementById('mainScreen');
+                    mainScreen.style.backgroundImage = 'url("https://neeko-copilot.bytedance.net/api/text_to_image?prompt=Karaoke%20room%20interface%20with%20star%20collected%20state%20showing%20%E5%DF%8F%E6%94%B6%E8%97%8F%20popup%20on%20dark%20blue%20space%20theme%20background&image_size=portrait_16_9")';
+                    break;
                 case 'exit':
                     alert('确定要退出房间吗？');
                     break;
