@@ -3,51 +3,1247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TT语音设计预览</title>
+    <title>TT语音K歌房</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #1a1a2e;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-        
+
         .phone-container {
             width: 375px;
             height: 812px;
             background-color: #000;
             border-radius: 40px;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
-        
+
         .phone-screen {
             width: 100%;
             height: 100%;
             position: relative;
-            overflow: hidden;
         }
-        
-        .design-image {
+
+        .main-screen {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            display: block;
+            background: url('design_image.png') center/cover no-repeat;
+            position: relative;
+        }
+
+        .secondary-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a1a2e;
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .secondary-screen.active {
+            display: flex;
+        }
+
+        .secondary-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .back-btn {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .screen-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .secondary-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            color: white;
+        }
+
+        .clickable-area {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .clickable-area:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        /* 顶部区域按钮 */
+        .room-info-btn {
+            top: 50px;
+            left: 16px;
+            width: 200px;
+            height: 60px;
+        }
+
+        .star-btn {
+            top: 60px;
+            right: 100px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .share-btn {
+            top: 60px;
+            right: 55px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .power-btn {
+            top: 60px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+        }
+
+        /* 中部区域按钮 */
+        .my-level-btn {
+            top: 130px;
+            left: 16px;
+            width: 160px;
+            height: 35px;
+        }
+
+        .user-avatar-btn {
+            top: 125px;
+            right: 90px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .quality-btn {
+            top: 170px;
+            left: 16px;
+            width: 100px;
+            height: 30px;
+        }
+
+        /* 麦位区域按钮 */
+        .mic-1-btn {
+            top: 350px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        .mic-2-btn {
+            top: 350px;
+            left: 160px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        .mic-3-btn {
+            top: 350px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        .mic-4-btn {
+            top: 420px;
+            left: 60px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        .mic-5-btn {
+            top: 420px;
+            right: 60px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        /* 功能按钮 */
+        .sing-btn {
+            top: 320px;
+            left: 16px;
+            width: 150px;
+            height: 40px;
+        }
+
+        .accompany-btn {
+            top: 320px;
+            right: 16px;
+            width: 150px;
+            height: 40px;
+        }
+
+        /* 点歌按钮 */
+        .song-list-btn {
+            top: 470px;
+            right: 20px;
+            width: 90px;
+            height: 50px;
+            border-radius: 25px;
+        }
+
+        /* 打赏按钮 */
+        .gift-btn {
+            top: 570px;
+            right: 30px;
+            width: 110px;
+            height: 60px;
+        }
+
+        /* 加入厂牌按钮 */
+        .join-club-btn {
+            top: 640px;
+            right: 20px;
+            width: 140px;
+            height: 40px;
+            border-radius: 20px;
+        }
+
+        /* 底部按钮 */
+        .bottom-gift-btn {
+            bottom: 20px;
+            left: 80px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .sound-btn {
+            bottom: 20px;
+            left: 140px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .message-btn {
+            bottom: 20px;
+            left: 200px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .menu-btn {
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .chat-input-area {
+            bottom: 20px;
+            left: 20px;
+            width: 180px;
+            height: 50px;
+        }
+
+        /* 二级页面内容样式 */
+        .page-card {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .page-card h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #ff6b9d;
+        }
+
+        .page-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .user-profile {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .user-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .user-id {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .song-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .song-artist {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .order-btn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .gift-item {
+            text-align: center;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gift-item:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .gift-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .gift-name {
+            font-size: 12px;
+        }
+
+        .gift-value {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
         }
     </style>
 </head>
 <body>
     <div class="phone-container">
         <div class="phone-screen">
-            <img src="design_image.png" alt="TT语音设计" class="design-image">
+            <!-- 主屏幕 -->
+            <div class="main-screen" id="mainScreen">
+                <!-- 顶部按钮 -->
+                <div class="clickable-area room-info-btn" data-page="room-info"></div>
+                <div class="clickable-area star-btn" data-page="favorites"></div>
+                <div class="clickable-area share-btn" data-page="share"></div>
+                <div class="clickable-area power-btn" data-page="exit"></div>
+                
+                <!-- 中部按钮 -->
+                <div class="clickable-area my-level-btn" data-page="level"></div>
+                <div class="clickable-area user-avatar-btn" data-page="user-profile"></div>
+                <div class="clickable-area quality-btn" data-page="quality"></div>
+                
+                <!-- 麦位按钮 -->
+                <div class="clickable-area mic-1-btn" data-page="mic-1"></div>
+                <div class="clickable-area mic-2-btn" data-page="mic-2"></div>
+                <div class="clickable-area mic-3-btn" data-page="mic-3"></div>
+                <div class="clickable-area mic-4-btn" data-page="mic-4"></div>
+                <div class="clickable-area mic-5-btn" data-page="mic-5"></div>
+                
+                <!-- 功能按钮 -->
+                <div class="clickable-area sing-btn" data-page="sing-mode"></div>
+                <div class="clickable-area accompany-btn" data-page="accompany-mode"></div>
+                
+                <!-- 点歌按钮 -->
+                <div class="clickable-area song-list-btn" data-page="song-list"></div>
+                
+                <!-- 打赏按钮 -->
+                <div class="clickable-area gift-btn" data-page="gift-shop"></div>
+                
+                <!-- 加入厂牌按钮 -->
+                <div class="clickable-area join-club-btn" data-page="join-club"></div>
+                
+                <!-- 底部按钮 -->
+                <div class="clickable-area bottom-gift-btn" data-page="gift-shop"></div>
+                <div class="clickable-area sound-btn" data-page="sound-settings"></div>
+                <div class="clickable-area message-btn" data-page="messages"></div>
+                <div class="clickable-area menu-btn" data-page="menu"></div>
+                <div class="clickable-area chat-input-area" data-page="chat"></div>
+            </div>
+
+            <!-- 房间信息页面 -->
+            <div class="secondary-screen" id="room-info-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">房间信息</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="user-profile">
+                        <div class="user-avatar-large">👑</div>
+                        <div class="user-name">微质</div>
+                        <div class="user-id">房间ID: 21173223</div>
+                    </div>
+                    <div class="page-card">
+                        <h3>房间详情</h3>
+                        <p>📢 房间主题：一起K歌</p>
+                        <p>👥 在线人数：1人</p>
+                        <p>⭐ 房间热度：47ms</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>房间设置</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🔒</div>
+                                <span>房间密码</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">👥</div>
+                                <span>邀请好友</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">⚙️</div>
+                                <span>房间管理</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏页面 -->
+            <div class="secondary-screen" id="favorites-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">我的收藏</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>收藏的房间</h3>
+                        <div class="song-item">
+                            <div class="song-cover">🏠</div>
+                            <div class="song-info">
+                                <div class="song-title">一起K歌</div>
+                                <div class="song-artist">房主：微质</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-card">
+                        <h3>收藏的歌曲</h3>
+                        <div class="song-item">
+                            <div class="song-cover">🎵</div>
+                            <div class="song-info">
+                                <div class="song-title">失去你我才知道要珍惜</div>
+                                <div class="song-artist">网络歌手</div>
+                            </div>
+                            <button class="order-btn">点歌</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分享页面 -->
+            <div class="secondary-screen" id="share-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">分享房间</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>分享到</h3>
+                        <div class="gift-grid">
+                            <div class="gift-item">
+                                <div class="gift-icon">💬</div>
+                                <div class="gift-name">微信</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">🐧</div>
+                                <div class="gift-name">QQ</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">🌐</div>
+                                <div class="gift-name">朋友圈</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">🔗</div>
+                                <div class="gift-name">复制链接</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-card">
+                        <h3>分享文案</h3>
+                        <p>我在TT语音K歌房等你一起唱歌！快来加入吧~ 🎤✨</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 退出页面 -->
+            <div class="secondary-screen" id="exit-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">退出房间</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>确定要离开房间吗？</h3>
+                        <p>离开后将断开与房间的连接</p>
+                    </div>
+                    <div class="page-card" style="display: flex; gap: 16px;">
+                        <button class="order-btn" style="flex: 1; background: rgba(255,255,255,0.2);" onclick="goBack()">取消</button>
+                        <button class="order-btn" style="flex: 1;" onclick="goBack()">确定退出</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 等级页面 -->
+            <div class="secondary-screen" id="level-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">我的段位</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="user-profile">
+                        <div class="user-avatar-large">🏆</div>
+                        <div class="user-name">质量独唱</div>
+                        <div class="user-id">段位等级</div>
+                    </div>
+                    <div class="page-card">
+                        <h3>段位说明</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🥉</div>
+                                <span>青铜 - 新手入门</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🥈</div>
+                                <span>白银 - 初露锋芒</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🥇</div>
+                                <span>黄金 - 实力唱将</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">💎</div>
+                                <span>钻石 - K歌达人</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">👑</div>
+                                <span>王者 - 超级巨星</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户资料页面 -->
+            <div class="secondary-screen" id="user-profile-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">用户资料</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="user-profile">
+                        <div class="user-avatar-large">😊</div>
+                        <div class="user-name">麦下</div>
+                        <div class="user-id">在线状态</div>
+                    </div>
+                    <div class="page-card">
+                        <h3>个人信息</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>演唱次数：128次</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">⭐</div>
+                                <span>粉丝数：56人</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">💝</div>
+                                <span>获赞：1024个</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="page-card">
+                        <h3>互动操作</h3>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="order-btn" style="flex: 1;">关注</button>
+                            <button class="order-btn" style="flex: 1; background: rgba(255,255,255,0.2);">私信</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 音质设置页面 -->
+            <div class="secondary-screen" id="quality-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">音质设置</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>音质选择</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">📶</div>
+                                <span>流畅 - 省流量模式</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔊</div>
+                                <span>标准 - 平衡模式</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎵</div>
+                                <span>高清 - 高品质模式</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">✨</div>
+                                <span>无损 - 发烧级音质</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 麦位页面 -->
+            <div class="secondary-screen" id="mic-1-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">麦位管理</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>麦位1 - 当前歌手</h3>
+                        <p>正在演唱：失去你我才知道要珍惜</p>
+                        <p>当前得分：1826分</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>麦位操作</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>抱上麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">👋</div>
+                                <span>踢下麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔒</div>
+                                <span>锁定麦位</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔇</div>
+                                <span>静音/取消静音</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 其他麦位页面复用同一模板 -->
+            <div class="secondary-screen" id="mic-2-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">麦位管理</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>麦位2 - 空闲</h3>
+                        <p>状态：等待上麦</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>麦位操作</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>申请上麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔒</div>
+                                <span>锁定麦位</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secondary-screen" id="mic-3-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">麦位管理</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>麦位3 - 空闲</h3>
+                        <p>状态：等待上麦</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>麦位操作</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>申请上麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔒</div>
+                                <span>锁定麦位</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secondary-screen" id="mic-4-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">麦位管理</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>麦位4 - 空闲</h3>
+                        <p>状态：等待上麦</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>麦位操作</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>申请上麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔒</div>
+                                <span>锁定麦位</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secondary-screen" id="mic-5-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">麦位管理</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>麦位5 - 空闲</h3>
+                        <p>状态：等待上麦</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>麦位操作</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>申请上麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔒</div>
+                                <span>锁定麦位</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 演唱模式页面 -->
+            <div class="secondary-screen" id="sing-mode-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">演唱模式</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>默默跟唱</h3>
+                        <p>开启后，只有你能听到自己的声音，适合练习</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>演唱设置</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎵</div>
+                                <span>原唱开关</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>麦克风音量</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔊</div>
+                                <span>伴奏音量</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">✨</div>
+                                <span>混响效果</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 伴奏模式页面 -->
+            <div class="secondary-screen" id="accompany-mode-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">伴奏设置</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>当前伴奏</h3>
+                        <p>Melody (伴奏)</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>伴奏设置</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎵</div>
+                                <span>原唱：关</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">⏯️</div>
+                                <span>播放/暂停</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🔄</div>
+                                <span>切换伴奏</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 点歌页面 -->
+            <div class="secondary-screen" id="song-list-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">点歌台</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>已点 (2)</h3>
+                        <div class="song-item">
+                            <div class="song-cover">🎵</div>
+                            <div class="song-info">
+                                <div class="song-title">沙滩恋歌怀</div>
+                                <div class="song-artist">53.6万人参与</div>
+                            </div>
+                            <button class="order-btn">已点</button>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-cover">🎶</div>
+                            <div class="song-info">
+                                <div class="song-title">下一首：没那么简单 (DJ阿卓版)</div>
+                                <div class="song-artist">排队中</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-card">
+                        <h3>热门推荐</h3>
+                        <div class="song-item">
+                            <div class="song-cover">🔥</div>
+                            <div class="song-info">
+                                <div class="song-title">告白气球</div>
+                                <div class="song-artist">周杰伦</div>
+                            </div>
+                            <button class="order-btn">点歌</button>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-cover">🌟</div>
+                            <div class="song-info">
+                                <div class="song-title">小幸运</div>
+                                <div class="song-artist">田馥甄</div>
+                            </div>
+                            <button class="order-btn">点歌</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 礼物商店页面 -->
+            <div class="secondary-screen" id="gift-shop-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">礼物商店</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>热门礼物</h3>
+                        <div class="gift-grid">
+                            <div class="gift-item">
+                                <div class="gift-icon">🌹</div>
+                                <div class="gift-name">鲜花</div>
+                                <div class="gift-value">1币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">💎</div>
+                                <div class="gift-name">钻石</div>
+                                <div class="gift-value">10币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">👑</div>
+                                <div class="gift-name">皇冠</div>
+                                <div class="gift-value">100币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">🚀</div>
+                                <div class="gift-name">火箭</div>
+                                <div class="gift-value">500币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">🎁</div>
+                                <div class="gift-name">礼盒</div>
+                                <div class="gift-value">50币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">💝</div>
+                                <div class="gift-name">爱心</div>
+                                <div class="gift-value">5币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">🎉</div>
+                                <div class="gift-name">派对</div>
+                                <div class="gift-value">200币</div>
+                            </div>
+                            <div class="gift-item">
+                                <div class="gift-icon">⭐</div>
+                                <div class="gift-name">星星</div>
+                                <div class="gift-value">2币</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加入厂牌页面 -->
+            <div class="secondary-screen" id="join-club-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">加入厂牌</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>暗恋Secret love</h3>
+                        <p>欢迎加入我们的厂牌！</p>
+                        <p>👥 成员数：128人</p>
+                        <p>⭐ 厂牌等级：钻石</p>
+                    </div>
+                    <div class="page-card">
+                        <h3>厂牌福利</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🎁</div>
+                                <span>专属礼物</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🏠</div>
+                                <span>专属房间</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>优先上麦</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">👑</div>
+                                <span>特殊标识</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="order-btn" style="width: 100%; padding: 16px;">立即加入</button>
+                </div>
+            </div>
+
+            <!-- 音效设置页面 -->
+            <div class="secondary-screen" id="sound-settings-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">音效设置</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>音效调节</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">🔊</div>
+                                <span>总音量</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎤</div>
+                                <span>麦克风</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎵</div>
+                                <span>伴奏</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">✨</div>
+                                <span>混响</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎶</div>
+                                <span>变声</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 消息页面 -->
+            <div class="secondary-screen" id="messages-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">消息中心</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>房间消息</h3>
+                        <div class="song-item">
+                            <div class="song-cover">👑</div>
+                            <div class="song-info">
+                                <div class="song-title">房主 是洛诗丫</div>
+                                <div class="song-artist">欢迎@CHANGE OF HEART，一起聊聊吧~</div>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-cover">👋</div>
+                            <div class="song-info">
+                                <div class="song-title">房主 是洛诗丫</div>
+                                <div class="song-artist">欢迎@尼尔巴斯哥哥，一起来聊聊吧~</div>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-cover">🎉</div>
+                            <div class="song-info">
+                                <div class="song-title">房主 是洛诗丫</div>
+                                <div class="song-artist">@尼尔巴斯哥哥来成为暗恋Secret love厂牌的一员吧</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 菜单页面 -->
+            <div class="secondary-screen" id="menu-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">更多功能</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>常用功能</h3>
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon">👥</div>
+                                <span>在线用户</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🏆</div>
+                                <span>排行榜</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">🎯</div>
+                                <span>活动中心</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">⚙️</div>
+                                <span>设置</span>
+                            </li>
+                            <li>
+                                <div class="feature-icon">❓</div>
+                                <span>帮助与反馈</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聊天页面 -->
+            <div class="secondary-screen" id="chat-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">公屏聊天</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-card">
+                        <h3>聊天记录</h3>
+                        <div class="song-item">
+                            <div class="song-cover">👑</div>
+                            <div class="song-info">
+                                <div class="song-title">房主 是洛诗丫</div>
+                                <div class="song-artist">欢迎来到房间~</div>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-cover">😊</div>
+                            <div class="song-info">
+                                <div class="song-title">麦下</div>
+                                <div class="song-artist">大家好呀！</div>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-cover">🎤</div>
+                            <div class="song-info">
+                                <div class="song-title">我</div>
+                                <div class="song-artist">这首歌好好听！</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color: rgba(255,255,255,0.1); padding: 12px; border-radius: 25px; display: flex; align-items: center;">
+                        <input type="text" placeholder="说点什么..." style="flex: 1; background: none; border: none; color: white; outline: none; padding: 8px;">
+                        <button class="order-btn" style="margin-left: 8px;">发送</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        let currentPage = 'main';
+
+        // 初始化点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const clickableAreas = document.querySelectorAll('.clickable-area');
+            
+            clickableAreas.forEach(area => {
+                area.addEventListener('click', function() {
+                    const pageName = this.getAttribute('data-page');
+                    if (pageName) {
+                        openPage(pageName);
+                    }
+                });
+            });
+        });
+
+        function openPage(pageName) {
+            // 隐藏主屏幕
+            document.getElementById('mainScreen').style.display = 'none';
+            
+            // 显示对应页面
+            const pageId = pageName + '-page';
+            const pageElement = document.getElementById(pageId);
+            if (pageElement) {
+                pageElement.classList.add('active');
+                currentPage = pageName;
+            }
+        }
+
+        function goBack() {
+            // 隐藏所有二级页面
+            const allPages = document.querySelectorAll('.secondary-screen');
+            allPages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示主屏幕
+            document.getElementById('mainScreen').style.display = 'block';
+            currentPage = 'main';
+        }
+
+        // 添加触摸反馈
+        document.addEventListener('DOMContentLoaded', function() {
+            const clickableAreas = document.querySelectorAll('.clickable-area');
+            
+            clickableAreas.forEach(area => {
+                area.addEventListener('touchstart', function() {
+                    this.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                });
+                
+                area.addEventListener('touchend', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
