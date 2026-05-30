@@ -309,7 +309,7 @@
             <div class="main-screen" id="mainScreen">
                 <!-- 顶部按钮 -->
                 <div class="clickable-area room-info-btn" data-page="room-info"></div>
-                <div class="clickable-area star-btn" data-action="collect"></div>
+                <div class="clickable-area star-btn" data-page="collect"></div>
                 <div class="clickable-area share-btn" data-page="share"></div>
                 <div class="clickable-area power-btn" data-action="exit"></div>
                 
@@ -370,6 +370,19 @@
                     <div class="page-content">
                         <div class="page-icon">🔗</div>
                         <div class="page-desc">分享页面</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secondary-screen" id="collect-page">
+                <div class="secondary-header">
+                    <div class="back-btn" onclick="goBack()">←</div>
+                    <div class="screen-title">收藏</div>
+                </div>
+                <div class="secondary-content">
+                    <div class="page-content">
+                        <div class="page-icon">⭐</div>
+                        <div class="page-desc">收藏页面</div>
                     </div>
                 </div>
             </div>
@@ -615,7 +628,21 @@
             });
         });
 
+        function goBack() {
+            const allPages = document.querySelectorAll('.secondary-screen');
+            allPages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById('mainScreen').style.display = 'block';
+        }
+
         function openPage(pageName) {
+            if (pageName === 'collect') {
+                const hint = document.getElementById('collectHint');
+                hint.classList.add('show');
+                setTimeout(() => hint.classList.remove('show'), 1500);
+            }
+            
             document.getElementById('mainScreen').style.display = 'none';
             
             const pageId = pageName + '-page';
@@ -625,21 +652,8 @@
             }
         }
 
-        function goBack() {
-            const allPages = document.querySelectorAll('.secondary-screen');
-            allPages.forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById('mainScreen').style.display = 'block';
-        }
-
         function handleAction(action) {
             switch(action) {
-                case 'collect':
-                    const hint = document.getElementById('collectHint');
-                    hint.classList.add('show');
-                    setTimeout(() => hint.classList.remove('show'), 1500);
-                    break;
                 case 'exit':
                     alert('确定要退出房间吗？');
                     break;
